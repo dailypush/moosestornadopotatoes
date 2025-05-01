@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tornado Potatoes - Catch the Potatoes!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            background: #f4f4f4;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+        }
+
+        #gameCanvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #333;
+            max-width: 100%;
+            max-height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        #score {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #333;
+            z-index: 1;
+        }
+
+        #startScreen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 2;
+        }
+
+        #startButton {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #startButton:hover {
+            background: #ff5252;
+        }
+
+        #gameOver {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 2;
+        }
+
+        .menu-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="score">Score: <span id="scoreValue">0</span></div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="startScreen">
+            <h1>Catch the Potatoes!</h1>
+            <p>Move the basket to catch falling potatoes.<br>
+               Don't let them hit the ground!</p>
+            <button id="startButton">Start Game</button>
+        </div>
+        <div id="gameOver">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <button id="restartButton">Play Again</button>
+        </div>
+        <a href="/" class="menu-button">Back to Menu</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startScreen = document.getElementById('startScreen');
+        const gameOverScreen = document.getElementById('gameOver');
+        const scoreElement = document.getElementById('scoreValue');
+        const finalScoreElement = document.getElementById('finalScore');
+        const startButton = document.getElementById('startButton');
+        const restartButton = document.getElementById('restartButton');
+
+        // Game variables
+        let score = 0;
+        let gameLoop;
+        let basket = {
+            x: 0,
+            y: 0,
+            width: 60,
+            height: 40
+        };
+        let potatoes = [];
+        let lastTime = 0;
+        let potatoSpawnInterval = 1000;
+        let lastPotatoSpawn = 0;
+
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = Math.min(600, window.innerWidth - 20);
+            canvas.height = Math.min(400, window.innerHeight - 20);
+            basket.y = canvas.height - basket.height - 10;
+            basket.x = canvas.width / 2 - basket.width / 2;
+        }
+
+        // Initialize game
+        function initGame() {
+            resizeCanvas();
+            score = 0;
+            potatoes = [];
+            scoreElement.textContent = score;
+            basket.x = canvas.width / 2 - basket.width / 2;
+            startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+        }
+
+        // Draw basket
+        function drawBasket() {
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
+        }
+
+        // Create potato
+        function createPotato() {
+            return {
+                x: Math.random() * (canvas.width - 20),
+                y: -20,
+                size: 20,
+                speed: 2 + Math.random() * 2
+            };
+        }
+
+        // Draw potato
+        function drawPotato(potato) {
+            ctx.fillStyle = '#D2B48C';
+            ctx.beginPath();
+            ctx.ellipse(
+                potato.x + potato.size/2,
+                potato.y + potato.size/2,
+                potato.size/2,
+                potato.size/3,
+                0,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+        }
+
+        // Game loop
+        function gameUpdate(currentTime) {
+            const deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Spawn new potatoes
+            if (currentTime - lastPotatoSpawn > potatoSpawnInterval) {
+                potatoes.push(createPotato());
+                lastPotatoSpawn = currentTime;
+            }
+
+            // Update and draw potatoes
+            for (let i = potatoes.length - 1; i >= 0; i--) {
+                const potato = potatoes[i];
+                potato.y += potato.speed;
+
+                // Check collision with basket
+                if (potato.y + potato.size > basket.y &&
+                    potato.x + potato.size > basket.x &&
+                    potato.x < basket.x + basket.width) {
+                    potatoes.splice(i, 1);
+                    score++;
+                    scoreElement.textContent = score;
+                    continue;
+                }
+
+                // Check if potato hit ground
+                if (potato.y > canvas.height) {
+                    gameOver();
+                    return;
+                }
+
+                drawPotato(potato);
+            }
+
+            drawBasket();
+            gameLoop = requestAnimationFrame(gameUpdate);
+        }
+
+        // Game over
+        function gameOver() {
+            cancelAnimationFrame(gameLoop);
+            gameOverScreen.style.display = 'block';
+            finalScoreElement.textContent = score;
+        }
+
+        // Event listeners
+        startButton.addEventListener('click', () => {
+            initGame();
+            gameLoop = requestAnimationFrame(gameUpdate);
+        });
+
+        restartButton.addEventListener('click', () => {
+            initGame();
+            gameLoop = requestAnimationFrame(gameUpdate);
+        });
+
+        // Mouse/Touch controls
+        let isDragging = false;
+
+        function updateBasketPosition(clientX) {
+            const rect = canvas.getBoundingClientRect();
+            const x = clientX - rect.left;
+            basket.x = Math.max(0, Math.min(canvas.width - basket.width, x - basket.width / 2));
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            updateBasketPosition(e.clientX);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                updateBasketPosition(e.clientX);
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            updateBasketPosition(e.touches[0].clientX);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                e.preventDefault();
+                updateBasketPosition(e.touches[0].clientX);
+            }
+        });
+
+        canvas.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', resizeCanvas);
+
+        // Initial setup
+        resizeCanvas();
+    </script>
+</body>
+</html>

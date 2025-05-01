@@ -1,0 +1,220 @@
+/* Custom variables */
+:root {
+    --primary-color: #ff4d00;
+    --primary-hover: #e64500;
+}
+
+/* Hero section styling */
+#hero {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+                      url('https://images.unsplash.com/photo-1567129937968-cdad8f07e2f8');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Custom button styling */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Text color utility */
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+/* Card hover effects */
+.card {
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Responsive image handling */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Custom spacing for mobile */
+@media (max-width: 768px) {
+    #hero h1 {
+        font-size: calc(2rem + 2vw);
+    }
+
+    .card-img-top {
+        height: 180px;
+    }
+
+    section {
+        padding: 3rem 0;
+    }
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Social Media Feed Section */
+.social-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card-img-wrapper {
+    position: relative;
+    padding-bottom: 75%; /* 4:3 aspect ratio */
+}
+
+.placeholder-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Instagram Feed Image */
+.instagram-post {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.social-card:hover .instagram-post {
+    transform: scale(1.05);
+}
+
+/* Facebook Post Content */
+.social-card .card-body {
+    padding: 1rem;
+    background: white;
+}
+
+.social-card p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.social-card .text-muted {
+    font-size: 0.8rem;
+}
+
+/* Styles for the PDF download button and spinner */
+.rotating-potato {
+    animation: rotate 4s linear infinite;
+    color: var(--primary-color);
+    transform-origin: center;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner-potato {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-potato svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Loading overlay styles */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.loading-overlay .spinner-potato {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1rem;
+}
+
+.loading-overlay .spinner-potato svg {
+    width: 100%;
+    height: 100%;
+    color: var(--primary-color);
+}
+
+.loading-overlay h5 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+/* Button styles */
+#downloadPdfBtn {
+    transition: all 0.3s ease;
+    min-height: 38px;
+}
+
+#downloadPdfBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+#downloadPdfBtn .button-text {
+    margin: 0 4px;
+}
+
+#downloadPdfBtn .spinner-potato {
+    width: 24px;
+    height: 24px;
+}
