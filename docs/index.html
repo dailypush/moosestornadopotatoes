@@ -192,29 +192,84 @@
     <!-- About Section -->
     <section id="about" class="py-5">
         <div class="container">
-            <h2 class="text-center mb-5">Our Story</h2>
-            <div class="card">
-                <div class="card-body p-4">
+            <header>
+                <h2 class="text-center mb-5">Our Chardon Food Truck Story</h2>
+            </header>
+            <article class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
                     <div class="row align-items-center">
                         <div class="col-md-6 mb-4 mb-md-0">
-                            <img src="https://images.unsplash.com/photo-1565992441121-4367c2967103"
-                                alt="Our food trailer" class="img-fluid rounded">
+                            <figure class="position-relative mb-0">
+                                <img src="./assets/red_trailer.jpg" 
+                                    alt="Mooses Tornado Potatoes food trailer in Chardon, Ohio" 
+                                    class="img-fluid rounded shadow-sm" 
+                                    width="600" height="400"
+                                    loading="lazy">
+                                <figcaption class="small text-muted mt-2">Our signature white food trailer in Chardon</figcaption>
+                            </figure>
                         </div>
                         <div class="col-md-6">
-                            <p class="text-muted mb-4">
-                                Started in 2020, Tornado Potatoes brings a unique twist to the classic potato. Our
-                                signature spiral-cut potatoes are freshly prepared, perfectly seasoned, and fried to
-                                crispy perfection.
-                            </p>
-                            <p class="text-muted">
-                                What began as a single food trailer has grown into Portland's favorite spot for this
-                                innovative Korean street food. We take pride in using locally sourced potatoes and
-                                creating our own blend of seasonings to give you the best possible experience.
-                            </p>
+                            <div itemscope itemtype="https://schema.org/FoodEstablishment">
+                                <meta itemprop="name" content="Mooses Tornado Potatoes">
+                                <meta itemprop="servesCuisine" content="Korean Street Food">
+                                <meta itemprop="priceRange" content="$">
+                                <div itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                                    <meta itemprop="addressLocality" content="Chardon">
+                                    <meta itemprop="addressRegion" content="OH">
+                                </div>
+                                <h3 class="h4 mb-3">From Street Food to Chardon's Favorite</h3>
+                                <div itemprop="description">
+                                    <p class="mb-4">
+                                        Established in 2020, <strong>Mooses Tornado Potatoes</strong> brings authentic Korean street food to Chardon with our signature spiral-cut potatoes. Unlike traditional fries, our tornado potatoes are freshly prepared, perfectly seasoned, and fried to crispy perfection using locally sourced ingredients.
+                                    </p>
+                                    <p class="mb-4">
+                                        What began as a single <strong>food trailer in Chardon, Ohio</strong> has grown into the area's go-to destination for this innovative <strong>spiral potato</strong> treat. Our commitment to quality and unique flavors has earned us a dedicated following throughout northeast Ohio.
+                                    </p>
+                                    <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+                                        <a href="#menu" class="btn btn-primary">Explore Menu</a>
+                                        <a href="#location" class="btn btn-outline-primary">Find Our Location</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <h3 class="h4 mb-4 text-center">What Makes Our Tornado Potatoes Special</h3>
+                            <div class="row g-4 justify-content-center">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-geo-alt text-primary fs-4 me-3 mt-1"></i>
+                                        <div>
+                                            <h4 class="h5 mb-2">Locally Sourced</h4>
+                                            <p class="text-muted">We partner with Ohio farmers to bring you the freshest, highest-quality potatoes.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-stars text-primary fs-4 me-3 mt-1"></i>
+                                        <div>
+                                            <h4 class="h5 mb-2">Proprietary Technique</h4>
+                                            <p class="text-muted">Our special spiral-cutting method creates the perfect texture - crispy outside, fluffy inside.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-heart text-primary fs-4 me-3 mt-1"></i>
+                                        <div>
+                                            <h4 class="h5 mb-2">Handcrafted Seasonings</h4>
+                                            <p class="text-muted">We create our own blend of seasonings for unique flavors you won't find anywhere else.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
         </div>
     </section>
 
