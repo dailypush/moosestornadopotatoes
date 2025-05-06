@@ -6,8 +6,8 @@
 
 /* Hero section styling */
 #hero {
-    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
-                      url('https://images.unsplash.com/photo-1567129937968-cdad8f07e2f8');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
+        url('./assets/Heroshot.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -80,12 +80,13 @@ html {
     position: relative;
     overflow: hidden;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-img-wrapper {
     position: relative;
-    padding-bottom: 75%; /* 4:3 aspect ratio */
+    padding-bottom: 75%;
+    /* 4:3 aspect ratio */
 }
 
 .placeholder-loader {
@@ -103,6 +104,7 @@ html {
     0% {
         background-position: 200% 0;
     }
+
     100% {
         background-position: -200% 0;
     }
@@ -150,6 +152,7 @@ html {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
