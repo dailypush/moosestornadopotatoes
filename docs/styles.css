@@ -75,6 +75,76 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Facebook Feed Styling */
+.fb-page {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid #dee2e6;
+}
+
+.fb-page iframe {
+    max-width: 100%;
+    border-radius: 0.5rem;
+}
+
+/* Facebook feed loading placeholder */
+.facebook-placeholder {
+    width: 100%;
+    height: 600px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+/* Fallback content styling */
+#fallback-content .card {
+    border: 2px dashed #dee2e6;
+    background-color: #f8f9fa;
+}
+
+#fallback-content .bi-exclamation-circle {
+    color: #ffc107 !important;
+}
+
+/* Responsive adjustments for Facebook feed */
+@media (max-width: 768px) {
+    .fb-page {
+        width: 100%;
+        min-height: 500px;
+    }
+    
+    .facebook-placeholder {
+        height: 500px;
+        font-size: 1rem;
+    }
+    
+    #social-feed .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .fb-page {
+        min-height: 400px;
+    }
+    
+    .facebook-placeholder {
+        height: 400px;
+    }
+}
+
 /* Social Media Feed Section */
 .social-card {
     position: relative;

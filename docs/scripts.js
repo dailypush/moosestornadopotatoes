@@ -42,70 +42,85 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add smooth transition for the overlay
     loadingOverlay.style.transition = 'opacity 0.5s ease-in-out';
 
-    const downloadBtn = document.getElementById('downloadPdfBtn');
-    const buttonText = downloadBtn.querySelector('.button-text');
-    const spinner = downloadBtn.querySelector('.spinner-potato');
-
-    downloadBtn.addEventListener('click', async () => {
-        // Show loading state
-        downloadBtn.disabled = true;
-        buttonText.textContent = 'Preparing PDF...';
-        spinner.classList.remove('d-none');
-        console.log('Spinner shown');
-
-        try {
-            // Add artificial delay to see the loading state
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Create new PDF document
-            const doc = new jsPDF();
-
-            // Add title
-            doc.setFontSize(24);
-            doc.text('Tornado Potatoes', 105, 20, { align: 'center' });
-
-            // Add subtitle
-            doc.setFontSize(14);
-            doc.text('Menu', 105, 30, { align: 'center' });
-
-            // Add menu items
-            let yPosition = 50;
-            menuItems.forEach(item => {
-                doc.setFontSize(16);
-                doc.text(`${item.name} - ${item.price}`, 20, yPosition);
-
-                doc.setFontSize(12);
-                doc.text(item.description, 20, yPosition + 7);
-
-                yPosition += 25;
-            });
-
-            // Add footer with contact information
-            doc.setFontSize(10);
-            const footerText = [
-                '123 Food Truck Lane, Portland, OR 97201',
-                'Phone: (503) 555-0123',
-                'Email: hello@tornadopotatoes.com',
-                'Hours: Mon-Thu 11AM-8PM, Fri-Sat 11AM-10PM, Sun 12PM-6PM'
-            ];
-
-            yPosition += 20;
-            footerText.forEach(text => {
-                doc.text(text, 105, yPosition, { align: 'center' });
-                yPosition += 5;
-            });
-
-            // Save the PDF
-            doc.save('tornado-potatoes-menu.pdf');
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('Sorry, there was an error generating the PDF. Please try again.');
-        } finally {
-            console.log('Resetting button state');
-            // Reset button state
-            downloadBtn.disabled = false;
-            buttonText.textContent = 'Download Menu (PDF)';
-            spinner.classList.add('d-none');
+    // Check if Facebook iframe loaded properly
+    setTimeout(function() {
+        const fbIframe = document.querySelector('#fb-container iframe');
+        if (!fbIframe || fbIframe.offsetHeight === 0) {
+            const fallbackContent = document.getElementById('fallback-content');
+            if (fallbackContent) {
+                document.querySelector('#fb-container').style.display = 'none';
+                fallbackContent.classList.remove('d-none');
+                console.log('Facebook fallback content displayed');
+            }
         }
-    });
+    }, 5000); // 5 seconds timeout for Facebook iframe to load
+
+    const downloadBtn = document.getElementById('downloadPdfBtn');
+    if (downloadBtn) {
+        const buttonText = downloadBtn.querySelector('.button-text');
+        const spinner = downloadBtn.querySelector('.spinner-potato');
+
+        downloadBtn.addEventListener('click', async () => {
+            // Show loading state
+            downloadBtn.disabled = true;
+            buttonText.textContent = 'Preparing PDF...';
+            spinner.classList.remove('d-none');
+            console.log('Spinner shown');
+
+            try {
+                // Add artificial delay to see the loading state
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Create new PDF document
+                const doc = new jsPDF();
+
+                // Add title
+                doc.setFontSize(24);
+                doc.text('Tornado Potatoes', 105, 20, { align: 'center' });
+
+                // Add subtitle
+                doc.setFontSize(14);
+                doc.text('Menu', 105, 30, { align: 'center' });
+
+                // Add menu items
+                let yPosition = 50;
+                menuItems.forEach(item => {
+                    doc.setFontSize(16);
+                    doc.text(`${item.name} - ${item.price}`, 20, yPosition);
+
+                    doc.setFontSize(12);
+                    doc.text(item.description, 20, yPosition + 7);
+
+                    yPosition += 25;
+                });
+
+                // Add footer with contact information
+                doc.setFontSize(10);
+                const footerText = [
+                    '123 Food Truck Lane, Portland, OR 97201',
+                    'Phone: (503) 555-0123',
+                    'Email: hello@tornadopotatoes.com',
+                    'Hours: Mon-Thu 11AM-8PM, Fri-Sat 11AM-10PM, Sun 12PM-6PM'
+                ];
+
+                yPosition += 20;
+                footerText.forEach(text => {
+                    doc.text(text, 105, yPosition, { align: 'center' });
+                    yPosition += 5;
+                });
+
+                // Save the PDF
+                doc.save('tornado-potatoes-menu.pdf');
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Sorry, there was an error generating the PDF. Please try again.');
+            } finally {
+                console.log('Resetting button state');
+                // Reset button state
+                downloadBtn.disabled = false;
+                buttonText.textContent = 'Download Menu (PDF)';
+                spinner.classList.add('d-none');
+            }
+        });
+    }
 });
