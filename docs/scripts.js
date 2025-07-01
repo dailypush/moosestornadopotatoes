@@ -1,5 +1,6 @@
 // Menu data - will be loaded from JSON
 let menuData = {};
+let historyData = {};
 
 // Function to load menu from JSON file
 async function loadMenu() {
@@ -29,6 +30,29 @@ async function loadMenu() {
             }
         };
         renderMenu();
+    }
+}
+
+// Function to load history from JSON file
+async function loadHistory() {
+    try {
+        const response = await fetch('./history.json');
+        historyData = await response.json();
+        renderHistory();
+    } catch (error) {
+        console.error('Error loading history:', error);
+        // Fallback history data
+        historyData = {
+            history: [
+                {
+                    year: "2020",
+                    title: "The Beginning",
+                    description: "Mooses Tornado Potatoes officially launched in Chardon Square.",
+                    image: "./assets/history/launch-2020.jpg"
+                }
+            ]
+        };
+        renderHistory();
     }
 }
 
@@ -66,10 +90,97 @@ function renderMenu() {
     menuContainer.innerHTML = menuHTML;
 }
 
+// Function to render history carousel
+function renderHistory() {
+    const carouselInner = document.getElementById('historyCarouselInner');
+    const indicators = document.getElementById('historyIndicators');
+    
+    if (!carouselInner || !indicators || !historyData.history) return;
+
+    let carouselHTML = '';
+    let indicatorsHTML = '';
+    const placeholderImage = 'https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800&h=400&fit=crop';
+
+    historyData.history.forEach((item, index) => {
+        const isActive = index === 0 ? 'active' : '';
+        const imageUrl = item.image || placeholderImage;
+
+        // Create carousel slide
+        carouselHTML += `
+            <div class="carousel-item ${isActive}">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-6">
+                        <img src="${imageUrl}" 
+                             class="d-block w-100 rounded shadow-sm" 
+                             alt="${item.title} - ${item.year}"
+                             style="height: 300px; object-fit: cover;"
+                             loading="lazy"
+                             onerror="this.src='${placeholderImage}'">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-4">
+                            <span class="badge bg-primary fs-6 mb-3">${item.year}</span>
+                            <h4 class="h3 mb-3">${item.title}</h4>
+                            <p class="text-muted fs-5">${item.description}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Create indicator
+        indicatorsHTML += `
+            <button type="button" data-bs-target="#historyCarousel" data-bs-slide-to="${index}" 
+                    ${isActive ? 'class="active" aria-current="true"' : ''} 
+                    aria-label="Slide ${index + 1}"></button>
+        `;
+    });
+
+    carouselInner.innerHTML = carouselHTML;
+    indicators.innerHTML = indicatorsHTML;
+}
+
 // Function to render individual menu item
 function renderMenuItem(item) {
     const placeholderImage = 'https://images.unsplash.com/photo-1642676763422-3b0864e65626?w=400&h=300&fit=crop';
     const imageUrl = item.image || placeholderImage;
+    
+    let ingredientsHTML = '';
+    if (item.ingredients && item.ingredients.length > 0) {
+        ingredientsHTML = `<p class="small text-muted mt-2">
+            <strong>Ingredients:</strong> ${item.ingredients.join(', ')}
+        </p>`;
+    }
+
+    let optionsHTML = '';
+    if (item.options && item.options.length > 0) {
+        optionsHTML = `<p class="small text-info mt-2">
+            <strong>Options:</strong> ${item.options.join(', ')}
+        </p>`;
+    }
+
+    return `
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img src="${imageUrl}" 
+                     class="card-img-top" 
+                     alt="${item.name}"
+                     style="height: 200px; object-fit: cover;"
+                     loading="lazy"
+                     onerror="this.src='${placeholderImage}'">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h3 class="h5 mb-0">${item.name}</h3>
+                        <span class="text-primary fw-bold fs-5">$${item.price}</span>
+                    </div>
+                    <p class="text-muted flex-grow-1">${item.description}</p>
+                    ${ingredientsHTML}
+                    ${optionsHTML}
+                </div>
+            </div>
+        </div>
+    `;
+}
     
     let ingredientsHTML = '';
     if (item.ingredients && item.ingredients.length > 0) {
@@ -115,8 +226,9 @@ window.jsPDF = window.jspdf.jsPDF;
 document.addEventListener('DOMContentLoaded', () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
 
-    // Load menu from YAML file
+    // Load menu and history from JSON files
     loadMenu();
+    loadHistory();
 
     // Hide loading overlay after content is loaded
     window.addEventListener('load', () => {

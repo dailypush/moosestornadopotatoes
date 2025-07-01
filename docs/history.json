@@ -1,0 +1,46 @@
+{
+    "history": [
+        {
+            "year": "2019",
+            "title": "The Idea",
+            "description": "Monica discovered tornado potatoes at a Korean street food festival and fell in love with the unique spiral-cut concept. The idea for bringing this amazing snack to Chardon was born.",
+            "image": "./assets/history/idea-2019.jpg"
+        },
+        {
+            "year": "2020",
+            "title": "The Beginning",
+            "description": "Mooses Tornado Potatoes officially launched in Chardon Square. Our first day serving the community was met with curiosity and excitement as locals tried tornado potatoes for the first time.",
+            "image": "./assets/history/launch-2020.jpg"
+        },
+        {
+            "year": "2021",
+            "title": "Growing Popular",
+            "description": "Word spread quickly throughout Geauga County. We expanded our menu with new flavors like Buffalo Chicken and Loaded Chili, becoming a must-visit spot in downtown Chardon.",
+            "image": "./assets/history/popular-2021.jpg"
+        },
+        {
+            "year": "2022",
+            "title": "Community Events",
+            "description": "We started participating in local festivals and events, including the Chardon Maple Festival and Geauga County Fair. Our tornado potatoes became a festival favorite.",
+            "image": "./assets/history/events-2022.jpg"
+        },
+        {
+            "year": "2023",
+            "title": "Menu Innovation",
+            "description": "Introduced our signature Half and Half potato and Chips + Dip variations. We also started serving Nathan's all-beef hot dogs to complement our potato offerings.",
+            "image": "./assets/history/innovation-2023.jpg"
+        },
+        {
+            "year": "2024",
+            "title": "Expanding Reach",
+            "description": "Started attending events beyond Chardon, including Mentor Rocks and other northeast Ohio festivals. Our social media following grew as more people discovered our unique food truck.",
+            "image": "./assets/history/expansion-2024.jpg"
+        },
+        {
+            "year": "2025",
+            "title": "Looking Forward",
+            "description": "Continuing to serve the best tornado potatoes in Ohio while exploring new flavors and locations. Always committed to quality ingredients and friendly service for our growing family of customers.",
+            "image": "./assets/history/future-2025.jpg"
+        }
+    ]
+}
