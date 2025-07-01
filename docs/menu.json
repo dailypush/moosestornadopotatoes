@@ -10,7 +10,7 @@
                     "seasoning"
                 ],
                 "price": 9,
-                "image": "./assets/images/menu/plain-potato.jpg"
+                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/plain-potato.jpg"
             },
             {
                 "name": "Loaded",
@@ -22,7 +22,7 @@
                     "chives"
                 ],
                 "price": 10,
-                "image": "./assets/images/menu/loaded-potato.jpg"
+                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/loaded-potato.jpg"
             },
             {
                 "name": "Garlic Parmesan",
@@ -32,7 +32,7 @@
                     "parmesan cheese"
                 ],
                 "price": 10,
-                "image": "./assets/images/menu/garlic-parmesan-potato.jpg"
+                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/garlic-parmesan-potato.jpg"
             },
             {
                 "name": "Chips + Dip",
@@ -45,7 +45,7 @@
                     "sausage +$2"
                 ],
                 "price": 10,
-                "image": "./assets/images/menu/chips-dip-potato.jpg"
+                "image": "./assets/potatoes/half_n_half.jpg"
             },
             {
                 "name": "Loaded Chili",
@@ -58,7 +58,7 @@
                     "chives"
                 ],
                 "price": 11,
-                "image": "./assets/images/menu/loaded-chili-potato.jpg"
+                "image": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=300&fit=crop"
             },
             {
                 "name": "Half and Half",
@@ -73,7 +73,7 @@
                     "parmesan cheese"
                 ],
                 "price": 12,
-                "image": "./assets/images/menu/half-and-half-potato.jpg"
+                "image": "./assets/potatoes/half_n_half.jpg"
             },
             {
                 "name": "Buffalo Chicken",
@@ -82,7 +82,7 @@
                     "buffalo chicken dip"
                 ],
                 "price": 14,
-                "image": "./assets/images/menu/buffalo-chicken-potato.jpg"
+                "image": "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=400&h=300&fit=crop"
             },
             {
                 "name": "Sausage Rumble",
@@ -93,7 +93,7 @@
                     "Rotel dip"
                 ],
                 "price": 14,
-                "image": "./assets/images/menu/sausage-rumble-potato.jpg"
+                "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop"
             }
         ],
         "hotDogs": [
@@ -105,7 +105,7 @@
                     "bun"
                 ],
                 "price": 4,
-                "image": "./assets/images/menu/plain-hotdog.jpg"
+                "image": "https://images.unsplash.com/photo-1612392061787-2d078b3d2017?w=400&h=300&fit=crop"
             },
             {
                 "name": "Chili Cheese Hot Dog",
@@ -117,7 +117,7 @@
                     "cheese"
                 ],
                 "price": 5,
-                "image": "./assets/images/menu/chili-cheese-hotdog.jpg"
+                "image": "https://images.unsplash.com/photo-1599894461133-da8d5de6a0ff?w=400&h=300&fit=crop"
             },
             {
                 "name": "Hot Dog with Custom Sauce",
@@ -132,7 +132,7 @@
                     "sour cream"
                 ],
                 "price": 5,
-                "image": "./assets/images/menu/custom-hotdog.jpg"
+                "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop"
             }
         ]
     },
@@ -141,7 +141,7 @@
             "name": "Bottled Water",
             "description": "Plain bottled water",
             "price": 1,
-            "image": "./assets/images/menu/bottled-water.jpg"
+            "image": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=300&fit=crop"
         },
         {
             "name": "Bottled Pop",
@@ -155,7 +155,7 @@
                 "Mountain Dew"
             ],
             "price": 2,
-            "image": "./assets/images/menu/bottled-soda.jpg"
+            "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop"
         }
     ]
 }
