@@ -226,22 +226,32 @@ window.jsPDF = window.jspdf.jsPDF;
 document.addEventListener('DOMContentLoaded', () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
 
-    // Load menu and history from JSON files
-    loadMenu();
-    loadHistory();
-
-    // Hide loading overlay after content is loaded
-    window.addEventListener('load', () => {
-        setTimeout(() => {
+    // Function to hide loading overlay
+    function hideLoadingOverlay() {
+        if (loadingOverlay) {
             loadingOverlay.style.opacity = '0';
             setTimeout(() => {
                 loadingOverlay.style.display = 'none';
             }, 500);
-        }, 1500); // Show loading for at least 1.5 seconds
+        }
+    }
+
+    // Load menu and history from JSON files
+    loadMenu();
+    loadHistory();
+
+    // Hide loading overlay after a reasonable time
+    setTimeout(hideLoadingOverlay, 2000);
+
+    // Also hide on window load as backup
+    window.addEventListener('load', () => {
+        setTimeout(hideLoadingOverlay, 500);
     });
 
     // Add smooth transition for the overlay
-    loadingOverlay.style.transition = 'opacity 0.5s ease-in-out';
+    if (loadingOverlay) {
+        loadingOverlay.style.transition = 'opacity 0.5s ease-in-out';
+    }
 
     // Check if Facebook iframe loaded properly
     setTimeout(function() {
