@@ -7,7 +7,7 @@
 /* Hero section styling */
 #hero {
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
-        url('./assets/Heroshot.jpg');
+        url('./assets/Heroshot.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
