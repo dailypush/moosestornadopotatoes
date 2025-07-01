@@ -1,19 +1,18 @@
-// Menu data - will be loaded from YAML
+// Menu data - will be loaded from JSON
 let menuData = {};
 
-// Function to load menu from YAML file
+// Function to load menu from JSON file
 async function loadMenu() {
     try {
-        const response = await fetch('./menu.yaml');
-        const yamlText = await response.text();
-        menuData = jsyaml.load(yamlText);
+        const response = await fetch('./menu.json');
+        menuData = await response.json();
         renderMenu();
     } catch (error) {
         console.error('Error loading menu:', error);
         // Fallback menu data
         menuData = {
-            Menu: {
-                Potatoes: [
+            menu: {
+                potatoes: [
                     {
                         name: "Plain",
                         description: "Like a french fry - good with ketchup, salt, malt vinegar",
@@ -41,25 +40,25 @@ function renderMenu() {
     let menuHTML = '';
 
     // Render Potatoes section
-    if (menuData.Menu && menuData.Menu.Potatoes) {
+    if (menuData.menu && menuData.menu.potatoes) {
         menuHTML += '<div class="col-12"><h3 class="h4 mb-4 text-primary">Tornado Potatoes</h3></div>';
-        menuData.Menu.Potatoes.forEach(item => {
+        menuData.menu.potatoes.forEach(item => {
             menuHTML += renderMenuItem(item);
         });
     }
 
     // Render Hot Dogs section if it exists
-    if (menuData.Menu && menuData.Menu.HotDogs) {
+    if (menuData.menu && menuData.menu.hotDogs) {
         menuHTML += '<div class="col-12 mt-5"><h3 class="h4 mb-4 text-primary">Hot Dogs</h3></div>';
-        menuData.Menu.HotDogs.forEach(item => {
+        menuData.menu.hotDogs.forEach(item => {
             menuHTML += renderMenuItem(item);
         });
     }
 
     // Render Drinks section if it exists
-    if (menuData.Drinks) {
+    if (menuData.drinks) {
         menuHTML += '<div class="col-12 mt-5"><h3 class="h4 mb-4 text-primary">Drinks</h3></div>';
-        menuData.Drinks.forEach(item => {
+        menuData.drinks.forEach(item => {
             menuHTML += renderMenuItem(item);
         });
     }
@@ -176,12 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 let yPosition = 50;
                 
                 // Add Potatoes section
-                if (menuData.Menu && menuData.Menu.Potatoes) {
+                if (menuData.menu && menuData.menu.potatoes) {
                     doc.setFontSize(18);
                     doc.text('Tornado Potatoes', 20, yPosition);
                     yPosition += 15;
                     
-                    menuData.Menu.Potatoes.forEach(item => {
+                    menuData.menu.potatoes.forEach(item => {
                         doc.setFontSize(14);
                         doc.text(`${item.name} - $${item.price}`, 20, yPosition);
                         doc.setFontSize(10);
@@ -191,13 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 // Add Hot Dogs section if it exists
-                if (menuData.Menu && menuData.Menu.HotDogs) {
+                if (menuData.menu && menuData.menu.hotDogs) {
                     yPosition += 10;
                     doc.setFontSize(18);
                     doc.text('Hot Dogs', 20, yPosition);
                     yPosition += 15;
                     
-                    menuData.Menu.HotDogs.forEach(item => {
+                    menuData.menu.hotDogs.forEach(item => {
                         doc.setFontSize(14);
                         doc.text(`${item.name} - $${item.price}`, 20, yPosition);
                         doc.setFontSize(10);
@@ -207,13 +206,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 // Add Drinks section if it exists
-                if (menuData.Drinks) {
+                if (menuData.drinks) {
                     yPosition += 10;
                     doc.setFontSize(18);
                     doc.text('Drinks', 20, yPosition);
                     yPosition += 15;
                     
-                    menuData.Drinks.forEach(item => {
+                    menuData.drinks.forEach(item => {
                         doc.setFontSize(14);
                         doc.text(`${item.name} - $${item.price}`, 20, yPosition);
                         doc.setFontSize(10);
