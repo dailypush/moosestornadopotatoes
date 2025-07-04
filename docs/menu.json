@@ -45,7 +45,7 @@
                     "sausage +$2"
                 ],
                 "price": 10,
-                "image": "./assets/potatoes/half_n_half.jpg"
+                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/chips-dip-potato.jpg"
             },
             {
                 "name": "Loaded Chili",
@@ -73,7 +73,7 @@
                     "parmesan cheese"
                 ],
                 "price": 12,
-                "image": "./assets/potatoes/half_n_half.jpg"
+                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/half-and-half-potato.jpg"
             },
             {
                 "name": "Buffalo Chicken",

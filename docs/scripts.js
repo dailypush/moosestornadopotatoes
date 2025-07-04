@@ -156,7 +156,7 @@ function renderHistory() {
 
 // Function to render individual menu item
 function renderMenuItem(item) {
-    const placeholderImage = 'https://images.unsplash.com/photo-1642676763422-3b0864e65626?w=400&h=300&fit=crop';
+    const placeholderImage = 'https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400&h=300&fit=crop';
     const imageUrl = item.image || placeholderImage;
     
     let ingredientsHTML = '';
@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 doc.setFontSize(10);
                 const footerText = [
                     'Chardon Square, Chardon, OH 44024',
-                    'Phone: (440) 555-0123',
+                    'Phone: (440) 339-1278',
                     'Email: hello@moosestornadopotatoes.com',
                     'Hours: Mon-Thu 11AM-8PM, Fri-Sat 11AM-10PM, Sun 12PM-6PM'
                 ];
