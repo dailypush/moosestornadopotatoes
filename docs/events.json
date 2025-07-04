@@ -1,36 +1,101 @@
 {
     "events": [
         {
-            "name": "Mentor Rocks",
+            "name": "Chardon Food Truck Friday",
+            "location": "Chardon Square",
+            "date": "2025-07-11",
+            "displayDate": "July 11",
+            "time": "11:00 AM - 7:00 PM",
+            "description": "Weekly food truck gathering in downtown Chardon",
+            "status": "upcoming",
+            "recurring": "weekly"
+        },
+        {
+            "name": "Chardon Food Truck Friday",
+            "location": "Chardon Square", 
+            "date": "2025-07-18",
+            "displayDate": "July 18",
+            "time": "11:00 AM - 7:00 PM",
+            "description": "Weekly food truck gathering in downtown Chardon",
+            "status": "upcoming",
+            "recurring": "weekly"
+        },
+        {
+            "name": "Chardon Food Truck Friday",
+            "location": "Chardon Square",
+            "date": "2025-07-25",
+            "displayDate": "July 25",
+            "time": "11:00 AM - 7:00 PM", 
+            "description": "Weekly food truck gathering in downtown Chardon",
+            "status": "upcoming",
+            "recurring": "weekly"
+        },
+        {
+            "name": "Mentor Rocks Festival",
             "location": "Mentor Civic Amphitheater",
-            "date": "July 27",
+            "date": "2025-07-27",
+            "displayDate": "July 27",
             "time": "5:00 PM - 10:00 PM",
-            "description": "Serving starts at 5pm, Concert at 7pm",
+            "description": "Live music festival with food vendors - serving starts at 5pm",
+            "status": "upcoming",
+            "website": "https://mentorrocks.com"
+        },
+        {
+            "name": "Burton Log Cabin Days",
+            "location": "Burton Village Square",
+            "date": "2025-08-02",
+            "displayDate": "August 2-3",
+            "time": "10:00 AM - 6:00 PM",
+            "description": "Historic village celebration with craft vendors and food",
             "status": "upcoming"
         },
         {
-            "name": "Chardon Maple Festival",
-            "location": "Chardon Square",
-            "date": "April 26-28",
-            "time": "10:00 AM - 6:00 PM",
-            "description": "Annual maple syrup celebration with tornado potatoes",
+            "name": "Cleveland Food Truck Festival",
+            "location": "Lakefront Stadium, Cleveland",
+            "date": "2025-08-15",
+            "displayDate": "August 15",
+            "time": "12:00 PM - 8:00 PM", 
+            "description": "Regional food truck gathering with live music and family activities",
             "status": "upcoming"
         },
         {
             "name": "Geauga County Fair",
             "location": "Burton Fairgrounds", 
-            "date": "September 2-8",
+            "date": "2025-09-02",
+            "displayDate": "September 2-8",
             "time": "11:00 AM - 9:00 PM",
-            "description": "County fair featuring local food vendors",
+            "description": "Annual county fair featuring local food vendors and agriculture exhibits",
+            "status": "upcoming",
+            "website": "https://geaugafair.com"
+        },
+        {
+            "name": "Punderson State Park Fall Festival",
+            "location": "Punderson State Park",
+            "date": "2025-09-20",
+            "displayDate": "September 20-21",
+            "time": "10:00 AM - 5:00 PM",
+            "description": "Fall celebration with food trucks and outdoor activities",
             "status": "upcoming"
         },
         {
-            "name": "Cleveland Food Truck Festival",
-            "location": "Lakefront Stadium",
-            "date": "August 15",
-            "time": "12:00 PM - 8:00 PM", 
-            "description": "Regional food truck gathering with live music",
+            "name": "Chardon Oktoberfest",
+            "location": "Chardon Square",
+            "date": "2025-10-05",
+            "displayDate": "October 5-6",
+            "time": "12:00 PM - 8:00 PM",
+            "description": "German-themed festival with traditional food and beer",
             "status": "upcoming"
+        },
+        {
+            "name": "Chardon Maple Festival",
+            "location": "Chardon Square",
+            "date": "2026-04-26",
+            "displayDate": "April 26-27, 2026",
+            "time": "10:00 AM - 6:00 PM",
+            "description": "Annual maple syrup celebration - Chardon's biggest festival!",
+            "status": "upcoming",
+            "featured": true,
+            "website": "https://chardonmaplefest.com"
         }
     ]
 }

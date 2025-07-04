@@ -94,9 +94,18 @@ async function loadHistory() {
 
 // Function to load events from JSON file
 async function loadEvents() {
+    console.log('loadEvents() called');
     try {
+        console.log('Fetching events.json...');
         const response = await fetch('./events.json');
+        console.log('Fetch response:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         eventsData = await response.json();
+        console.log('Events data loaded:', eventsData);
         renderEvents();
     } catch (error) {
         console.error('Error loading events:', error);
@@ -105,14 +114,16 @@ async function loadEvents() {
             events: [
                 {
                     name: "Mentor Rocks",
-                    location: "Mentor Civic Amphitheater",
-                    date: "July 27",
+                    location: "Mentor Civic Amphitheater", 
+                    date: "2025-07-27",
+                    displayDate: "July 27",
                     time: "5:00 PM - 10:00 PM",
                     description: "Serving starts at 5pm, Concert at 7pm",
                     status: "upcoming"
                 }
             ]
         };
+        console.log('Using fallback events data:', eventsData);
         renderEvents();
     }
 }
@@ -120,15 +131,18 @@ async function loadEvents() {
 // Function to render events
 function renderEvents() {
     try {
-        console.log('Attempting to render events');
+        console.log('renderEvents() called');
+        console.log('eventsData:', eventsData);
+        
         const eventsContainer = document.getElementById('events-container');
+        console.log('eventsContainer found:', !!eventsContainer);
         
         if (!eventsContainer) {
-            console.log('Events container not found');
+            console.error('Events container not found!');
             return;
         }
         
-        if (!eventsData.events || eventsData.events.length === 0) {
+        if (!eventsData || !eventsData.events || eventsData.events.length === 0) {
             console.log('No events data available');
             eventsContainer.innerHTML = '<p class="text-muted">No upcoming events at this time.</p>';
             return;
@@ -136,8 +150,17 @@ function renderEvents() {
 
         let eventsHTML = '';
         
-        // Filter and display only upcoming events
-        const upcomingEvents = eventsData.events.filter(event => event.status === 'upcoming');
+        // Filter and sort upcoming events chronologically
+        const upcomingEvents = eventsData.events
+            .filter(event => event.status === 'upcoming')
+            .sort((a, b) => {
+                // Parse dates for comparison (handle both ISO format and fallback)
+                const dateA = new Date(a.date || a.displayDate);
+                const dateB = new Date(b.date || b.displayDate);
+                return dateA - dateB;
+            });
+        
+        console.log('Upcoming events (sorted):', upcomingEvents);
         
         if (upcomingEvents.length === 0) {
             eventsHTML = '<p class="text-muted">No upcoming events at this time.</p>';
@@ -145,19 +168,29 @@ function renderEvents() {
             eventsHTML = '<div class="list-group list-group-flush">';
             
             upcomingEvents.forEach(event => {
+                // Use displayDate if available, otherwise fall back to date
+                const displayDate = event.displayDate || event.date;
+                const featuredClass = event.featured ? ' border-warning' : '';
+                const recurringBadge = event.recurring ? `<span class="badge bg-success rounded-pill me-2 small">Weekly</span>` : '';
+                const websiteLink = event.website ? `<a href="${event.website}" target="_blank" class="small text-primary text-decoration-none"><i class="bi bi-link-45deg me-1"></i>Event Website</a>` : '';
+                
                 eventsHTML += `
-                    <div class="list-group-item px-0">
+                    <div class="list-group-item px-0${featuredClass}">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <h5 class="h6 mb-1">${event.name}</h5>
-                                <p class="small text-muted mb-1">${event.location}</p>
-                                <p class="small text-muted mb-1">${event.time}</p>
-                                <p class="small text-success mb-0">
+                                <p class="small text-muted mb-1"><i class="bi bi-geo-alt me-1"></i>${event.location}</p>
+                                <p class="small text-muted mb-1"><i class="bi bi-clock me-1"></i>${event.time}</p>
+                                <p class="small text-success mb-1">
                                     <i class="bi bi-info-circle me-1"></i>
                                     ${event.description}
                                 </p>
+                                ${websiteLink ? `<p class="mb-0">${websiteLink}</p>` : ''}
                             </div>
-                            <span class="badge bg-primary rounded-pill ms-3">${event.date}</span>
+                            <div class="text-end">
+                                ${recurringBadge}
+                                <span class="badge bg-primary rounded-pill">${displayDate}</span>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -166,6 +199,7 @@ function renderEvents() {
             eventsHTML += '</div>';
         }
 
+        console.log('Setting eventsContainer innerHTML');
         eventsContainer.innerHTML = eventsHTML;
         console.log('Events rendered successfully');
     } catch (error) {
@@ -371,20 +405,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Load menu and history from JSON files
-    console.log('Starting to load menu, history, and events');
-    try {
-        loadMenu();
-        loadHistory();
-        loadEvents();
-        console.log('Menu, history, and events loading initiated');
-    } catch (error) {
-        console.error('Error initiating content load:', error);
+    // Initialize everything when DOM is ready
+    function initializeContent() {
+        console.log('Initializing content...');
+        
+        // Load menu, history, and events from JSON files
+        console.log('Starting to load menu, history, and events');
+        try {
+            loadMenu();
+            loadHistory();
+            loadEvents();
+            console.log('Menu, history, and events loading initiated');
+        } catch (error) {
+            console.error('Error initiating content load:', error);
+        }
+
+        // Hide loading overlay after a reasonable time
+        console.log('Setting timeout to hide overlay in 1.5 seconds');
+        setTimeout(hideLoadingOverlay, 1500);
     }
 
-    // Hide loading overlay after a reasonable time
-    console.log('Setting timeout to hide overlay in 1.5 seconds');
-    setTimeout(hideLoadingOverlay, 1500);
+    // Wait for DOM to be ready before initializing
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeContent);
+    } else {
+        initializeContent();
+    }
 
     // Also hide on window load as backup
     window.addEventListener('load', () => {
