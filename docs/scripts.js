@@ -2,6 +2,33 @@
 let menuData = {};
 let historyData = {};
 
+// Global error handler to suppress Facebook console spam
+window.addEventListener('error', function(event) {
+    const message = event.message || '';
+    const source = event.filename || '';
+    
+    // Suppress Facebook-related errors
+    if (message.includes('Could not find element') || 
+        message.includes('fburl.com') || 
+        message.includes('__elem_') ||
+        source.includes('facebook.com') ||
+        source.includes('fbcdn.net')) {
+        event.preventDefault();
+        return false;
+    }
+});
+
+// Suppress unhandled promise rejections from Facebook
+window.addEventListener('unhandledrejection', function(event) {
+    const reason = event.reason || '';
+    if (typeof reason === 'string' && 
+        (reason.includes('Could not find element') || 
+         reason.includes('fburl.com') || 
+         reason.includes('__elem_'))) {
+        event.preventDefault();
+    }
+});
+
 // Function to load menu from JSON file
 async function loadMenu() {
     try {
@@ -201,6 +228,20 @@ window.jsPDF = window.jspdf.jsPDF;
 
 // Add loading overlay functionality
 document.addEventListener('DOMContentLoaded', () => {
+    // Suppress Facebook console errors
+    const originalConsoleError = console.error;
+    console.error = function(...args) {
+        const message = args.join(' ');
+        // Filter out Facebook-related errors
+        if (message.includes('Could not find element') || 
+            message.includes('fburl.com') || 
+            message.includes('__elem_') ||
+            message.includes('Module "__elem_')) {
+            return; // Don't log Facebook errors
+        }
+        originalConsoleError.apply(console, args);
+    };
+
     const loadingOverlay = document.getElementById('loadingOverlay');
 
     // Function to hide loading overlay
@@ -244,15 +285,29 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Transition added to loading overlay');
     }
 
-    // Check if Facebook iframe loaded properly
+    // Check if Facebook iframe loaded properly with better error handling
     setTimeout(function() {
-        const fbIframe = document.querySelector('#fb-container iframe');
-        if (!fbIframe || fbIframe.offsetHeight === 0) {
+        try {
+            const fbContainer = document.querySelector('#fb-container');
+            const fbIframe = fbContainer ? fbContainer.querySelector('iframe') : null;
+            
+            if (!fbIframe || fbIframe.offsetHeight === 0) {
+                console.log('Facebook iframe failed to load, showing fallback');
+                const fallbackContent = document.getElementById('fallback-content');
+                if (fallbackContent && fbContainer) {
+                    fbContainer.style.display = 'none';
+                    fallbackContent.classList.remove('d-none');
+                }
+            } else {
+                console.log('Facebook iframe loaded successfully');
+            }
+        } catch (error) {
+            console.log('Facebook iframe check failed, showing fallback');
             const fallbackContent = document.getElementById('fallback-content');
-            if (fallbackContent) {
-                document.querySelector('#fb-container').style.display = 'none';
+            const fbContainer = document.querySelector('#fb-container');
+            if (fallbackContent && fbContainer) {
+                fbContainer.style.display = 'none';
                 fallbackContent.classList.remove('d-none');
-                console.log('Facebook fallback content displayed');
             }
         }
     }, 5000); // 5 seconds timeout for Facebook iframe to load
