@@ -1,6 +1,7 @@
 // Menu data - will be loaded from JSON
 let menuData = {};
 let historyData = {};
+let eventsData = {};
 
 // Global error handler to suppress Facebook console spam and CORB errors
 window.addEventListener('error', function(event) {
@@ -53,13 +54,13 @@ async function loadMenu() {
                         name: "Plain",
                         description: "Like a french fry - good with ketchup, salt, malt vinegar",
                         price: 9,
-                        image: "./assets/images/menu/plain-potato.jpg"
+                        image: "https://ik.imagekit.io/Potato/menu/plain-potato.jpg"
                     },
                     {
                         name: "Loaded",
                         description: "Sour cream, cheese, bacon & chives on a spiral potato",
                         price: 10,
-                        image: "./assets/images/menu/loaded-potato.jpg"
+                        image: "https://ik.imagekit.io/Potato/menu/loaded-potato.jpg"
                     }
                 ]
             }
@@ -83,11 +84,92 @@ async function loadHistory() {
                     year: "2020",
                     title: "The Beginning",
                     description: "Mooses Tornado Potatoes officially launched in Chardon Square.",
-                    image: "./assets/history/launch-2020.jpg"
+                    image: "https://ik.imagekit.io/Potato/history/launch-2020.jpg"
                 }
             ]
         };
         renderHistory();
+    }
+}
+
+// Function to load events from JSON file
+async function loadEvents() {
+    try {
+        const response = await fetch('./events.json');
+        eventsData = await response.json();
+        renderEvents();
+    } catch (error) {
+        console.error('Error loading events:', error);
+        // Fallback events data
+        eventsData = {
+            events: [
+                {
+                    name: "Mentor Rocks",
+                    location: "Mentor Civic Amphitheater",
+                    date: "July 27",
+                    time: "5:00 PM - 10:00 PM",
+                    description: "Serving starts at 5pm, Concert at 7pm",
+                    status: "upcoming"
+                }
+            ]
+        };
+        renderEvents();
+    }
+}
+
+// Function to render events
+function renderEvents() {
+    try {
+        console.log('Attempting to render events');
+        const eventsContainer = document.getElementById('events-container');
+        
+        if (!eventsContainer) {
+            console.log('Events container not found');
+            return;
+        }
+        
+        if (!eventsData.events || eventsData.events.length === 0) {
+            console.log('No events data available');
+            eventsContainer.innerHTML = '<p class="text-muted">No upcoming events at this time.</p>';
+            return;
+        }
+
+        let eventsHTML = '';
+        
+        // Filter and display only upcoming events
+        const upcomingEvents = eventsData.events.filter(event => event.status === 'upcoming');
+        
+        if (upcomingEvents.length === 0) {
+            eventsHTML = '<p class="text-muted">No upcoming events at this time.</p>';
+        } else {
+            eventsHTML = '<div class="list-group list-group-flush">';
+            
+            upcomingEvents.forEach(event => {
+                eventsHTML += `
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 class="h6 mb-1">${event.name}</h5>
+                                <p class="small text-muted mb-1">${event.location}</p>
+                                <p class="small text-muted mb-1">${event.time}</p>
+                                <p class="small text-success mb-0">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    ${event.description}
+                                </p>
+                            </div>
+                            <span class="badge bg-primary rounded-pill ms-3">${event.date}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            eventsHTML += '</div>';
+        }
+
+        eventsContainer.innerHTML = eventsHTML;
+        console.log('Events rendered successfully');
+    } catch (error) {
+        console.error('Error rendering events:', error);
     }
 }
 
@@ -290,11 +372,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load menu and history from JSON files
-    console.log('Starting to load menu and history');
+    console.log('Starting to load menu, history, and events');
     try {
         loadMenu();
         loadHistory();
-        console.log('Menu and history loading initiated');
+        loadEvents();
+        console.log('Menu, history, and events loading initiated');
     } catch (error) {
         console.error('Error initiating content load:', error);
     }

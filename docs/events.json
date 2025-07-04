@@ -1,0 +1,36 @@
+{
+    "events": [
+        {
+            "name": "Mentor Rocks",
+            "location": "Mentor Civic Amphitheater",
+            "date": "July 27",
+            "time": "5:00 PM - 10:00 PM",
+            "description": "Serving starts at 5pm, Concert at 7pm",
+            "status": "upcoming"
+        },
+        {
+            "name": "Chardon Maple Festival",
+            "location": "Chardon Square",
+            "date": "April 26-28",
+            "time": "10:00 AM - 6:00 PM",
+            "description": "Annual maple syrup celebration with tornado potatoes",
+            "status": "upcoming"
+        },
+        {
+            "name": "Geauga County Fair",
+            "location": "Burton Fairgrounds", 
+            "date": "September 2-8",
+            "time": "11:00 AM - 9:00 PM",
+            "description": "County fair featuring local food vendors",
+            "status": "upcoming"
+        },
+        {
+            "name": "Cleveland Food Truck Festival",
+            "location": "Lakefront Stadium",
+            "date": "August 15",
+            "time": "12:00 PM - 8:00 PM", 
+            "description": "Regional food truck gathering with live music",
+            "status": "upcoming"
+        }
+    ]
+}
