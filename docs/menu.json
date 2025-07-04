@@ -10,7 +10,7 @@
                     "seasoning"
                 ],
                 "price": 9,
-                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/plain-potato.jpg"
+                "image": "https://ik.imagekit.io/Potato/menu/plain-potato.jpg"
             },
             {
                 "name": "Loaded",
@@ -22,7 +22,7 @@
                     "chives"
                 ],
                 "price": 10,
-                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/loaded-potato.jpg"
+                "image": "https://ik.imagekit.io/Potato/menu/loaded-potato.jpg"
             },
             {
                 "name": "Garlic Parmesan",
@@ -32,7 +32,7 @@
                     "parmesan cheese"
                 ],
                 "price": 10,
-                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/garlic-parmesan-potato.jpg"
+                "image": "https://ik.imagekit.io/Potato/menu/garlic-parmesan-potato.jpg"
             },
             {
                 "name": "Chips + Dip",
@@ -45,7 +45,7 @@
                     "sausage +$2"
                 ],
                 "price": 10,
-                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/chips-dip-potato.jpg"
+                "image": "https://ik.imagekit.io/Potato/menu/chips-dip-potato.jpg"
             },
             {
                 "name": "Loaded Chili",
@@ -73,7 +73,7 @@
                     "parmesan cheese"
                 ],
                 "price": 12,
-                "image": "https://ik.imagekit.io/moosestornadopotatoes/menu/half-and-half-potato.jpg"
+                "image": "https://ik.imagekit.io/Potato/menu/half-and-half-potato.jpg"
             },
             {
                 "name": "Buffalo Chicken",
