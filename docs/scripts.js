@@ -13,6 +13,8 @@ window.addEventListener('error', function(event) {
         message.includes('__elem_') ||
         message.includes('Cross-Origin Read Blocking') ||
         message.includes('CORB') ||
+        message.includes('Content Security Policy') ||
+        message.includes('unsafe-eval') ||
         source.includes('facebook.com') ||
         source.includes('fbcdn.net')) {
         event.preventDefault();
@@ -28,34 +30,9 @@ window.addEventListener('unhandledrejection', function(event) {
          reason.includes('fburl.com') || 
          reason.includes('__elem_') ||
          reason.includes('Cross-Origin Read Blocking') ||
-         reason.includes('CORB'))) {
-        event.preventDefault();
-    }
-});
-
-// Global error handler to suppress Facebook console spam
-window.addEventListener('error', function(event) {
-    const message = event.message || '';
-    const source = event.filename || '';
-    
-    // Suppress Facebook-related errors
-    if (message.includes('Could not find element') || 
-        message.includes('fburl.com') || 
-        message.includes('__elem_') ||
-        source.includes('facebook.com') ||
-        source.includes('fbcdn.net')) {
-        event.preventDefault();
-        return false;
-    }
-});
-
-// Suppress unhandled promise rejections from Facebook
-window.addEventListener('unhandledrejection', function(event) {
-    const reason = event.reason || '';
-    if (typeof reason === 'string' && 
-        (reason.includes('Could not find element') || 
-         reason.includes('fburl.com') || 
-         reason.includes('__elem_'))) {
+         reason.includes('CORB') ||
+         reason.includes('Content Security Policy') ||
+         reason.includes('unsafe-eval'))) {
         event.preventDefault();
     }
 });
@@ -254,8 +231,10 @@ function renderMenuItem(item) {
     `;
 }
 
-// Initialize PDF functionality
-window.jsPDF = window.jspdf.jsPDF;
+// Initialize PDF functionality safely
+if (typeof window.jspdf !== 'undefined') {
+    window.jsPDF = window.jspdf.jsPDF;
+}
 
 // Add loading overlay functionality
 document.addEventListener('DOMContentLoaded', () => {
@@ -271,7 +250,9 @@ document.addEventListener('DOMContentLoaded', () => {
             message.includes('__elem_') ||
             message.includes('Cross-Origin Read Blocking') ||
             message.includes('CORB blocked') ||
-            message.includes('Module "__elem_')) {
+            message.includes('Module "__elem_') ||
+            message.includes('Content Security Policy') ||
+            message.includes('unsafe-eval')) {
             return; // Don't log these errors
         }
         originalConsoleError.apply(console, args);
@@ -279,11 +260,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     console.warn = function(...args) {
         const message = args.join(' ');
-        // Filter out CORB warnings
+        // Filter out CORB warnings and CSP warnings
         if (message.includes('Cross-Origin Read Blocking') ||
             message.includes('CORB blocked') ||
             message.includes('facebook.com') ||
-            message.includes('fbcdn.net')) {
+            message.includes('fbcdn.net') ||
+            message.includes('Content Security Policy') ||
+            message.includes('unsafe-eval')) {
             return; // Don't log these warnings
         }
         originalConsoleWarn.apply(console, args);
