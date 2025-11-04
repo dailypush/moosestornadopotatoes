@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://connect.facebook.net https://www.facebook.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; frame-src https://www.facebook.com https://www.openstreetmap.org; connect-src 'self' https://ik.imagekit.io https://images.unsplash.com; font-src 'self' https://cdn.jsdelivr.net;">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://connect.facebook.net https://www.facebook.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; frame-src https://www.facebook.com https://www.openstreetmap.org; connect-src 'self' https://ik.imagekit.io https://images.unsplash.com; font-src 'self' https://cdn.jsdelivr.net;">
     <title>Mooses Tornado Potatoes - Best Food Truck in Chardon, Ohio</title>
     <meta name="description"
         content="Visit Mooses Tornado Potatoes in Chardon, Ohio. Locally famous spiral cut potatoes on a stick with unique seasonings. The perfect Chardon Square street food!">
@@ -116,38 +117,96 @@
                 <h1 class="display-2 fw-bold mb-4">Mooses Tornado Potatoes</h1>
                 <p class="lead mb-4">Spiral cut potatoes on a stick, perfectly seasoned and fried to crispy perfection
                 </p>
-                <a href="#menu" class="btn btn-primary btn-lg">View Our Menu</a>
+                <a href="#gallery" class="btn btn-primary btn-lg">See Our Creations</a>
             </div>
         </div>
     </section>
 
-    <!-- Menu Section -->
-    <section id="menu" class="py-5">
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-5 bg-light">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <h2>Our Menu</h2>
-                <button id="downloadPdfBtn" class="btn btn-outline-primary d-flex align-items-center gap-2">
-                    <i class="bi bi-download"></i>
-                    <span class="button-text">Download Menu (PDF)</span>
-                    <div class="spinner-potato d-none">
-                        <svg class="rotating-potato" width="24" height="24" viewBox="0 0 100 100">
-                            <!-- Stick -->
-                            <line x1="50" y1="85" x2="50" y2="95" stroke="currentColor" stroke-width="4"
-                                stroke-linecap="round" />
-                            <!-- Elongated potato shape -->
-                            <path
-                                d="M35 20 Q50 15, 65 20 Q70 35, 70 50 Q70 65, 65 80 Q50 85, 35 80 Q30 65, 30 50 Q30 35, 35 20"
-                                fill="none" stroke="currentColor" stroke-width="2" />
-                            <!-- Spiral cuts -->
-                            <path d="M35 20 Q45 25, 65 30 Q60 40, 40 45 Q45 55, 65 60 Q60 70, 35 80" fill="none"
-                                stroke="currentColor" stroke-width="2" />
-                        </svg>
+            <h2 class="text-center mb-5">Our Menu</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://ik.imagekit.io/Potato/potatoes/loaded_potato.jpg?updatedAt=1762224163100"
+                            class="card-img-top" alt="The Loaded Tornado Potato" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">The Loaded Tornado Potato</h5>
+                            <p class="card-text text-muted">Sour cream, cheese, bacon + chives</p>
+                        </div>
                     </div>
-                </button>
-            </div>
-
-            <div id="menu-container" class="row g-4">
-                <!-- Menu items will be loaded dynamically -->
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://ik.imagekit.io/Potato/potatoes/IMG_6338.PNG?updatedAt=1762224163100"
+                            class="card-img-top" alt="The Garlic Parmesan Tornado Potato" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">The Garlic Parmesan Tornado Potato</h5>
+                            <p class="card-text text-muted">Truckmade garlic aioli with parmesan cheese over potato</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://ik.imagekit.io/Potato/potatoes/half_n_half.jpg?updatedAt=1762224163100"
+                            class="card-img-top" alt="The Half and Half Tornado Potato" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">The Half and Half Tornado Potato</h5>
+                            <p class="card-text text-muted">Half Buffalo chicken, Half Loaded or Garlic</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://ik.imagekit.io/Potato/potatoes/IMG_6428.jpeg?updatedAt=1762224163100"
+                            class="card-img-top" alt="The Buffalo Chicken Tornado Potato" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">The Buffalo Chicken Tornado Potato</h5>
+                            <p class="card-text text-muted">Truckmade mild buffalo chicken dip drizzled over potato</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://ik.imagekit.io/Potato/potatoes/IMG_6514.jpeg?updatedAt=1762224163100"
+                            class="card-img-top" alt="The Sausage Rumble Tornado Potato" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">The Sausage Rumble Tornado Potato <span class="badge bg-success">NEW!</span></h5>
+                            <p class="card-text text-muted">Truckmade sausage, cream cheese, Rotel dip</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://ik.imagekit.io/Potato/potatoes/IMG_6339.PNG?updatedAt=1762224163100"
+                            class="card-img-top" alt="The Loaded Chili Tornado Potato" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">The Loaded Chili Tornado Potato</h5>
+                            <p class="card-text text-muted">Chili, cheese, sour cream, bacon + chives</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://ik.imagekit.io/Potato/potatoes/IMG_6345.PNG?updatedAt=1762224163100"
+                            class="card-img-top" alt="The Chips + Dip Tornado Potato" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">The Chips + Dip Tornado Potato</h5>
+                            <p class="card-text text-muted">Includes two of your favorite sauces in cups on the side. Choose: Sour cream, garlic aioli, BBQ, mild buffalo chicken, sausage + Rotel</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://ik.imagekit.io/Potato/potatoes/IMG_6514.jpeg?updatedAt=1762224163100"
+                            class="card-img-top" alt="The Plain Tornado Potato" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">The Plain Tornado Potato</h5>
+                            <p class="card-text text-muted">Like a french fry - good with ketchup, salt, malt vinegar</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -245,7 +304,7 @@
                     <div class="row mt-5">
                         <div class="col-12">
                             <h3 class="h4 mb-4 text-center">Our Journey Through the Years</h3>
-                            
+
                             <!-- History Carousel -->
                             <div id="historyCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
                                 <div class="carousel-indicators" id="historyIndicators">
@@ -254,11 +313,13 @@
                                 <div class="carousel-inner" id="historyCarouselInner">
                                     <!-- History slides will be loaded dynamically -->
                                 </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#historyCarousel" data-bs-slide="prev">
+                                <button class="carousel-control-prev" type="button" data-bs-target="#historyCarousel"
+                                    data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>
                                 </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#historyCarousel" data-bs-slide="next">
+                                <button class="carousel-control-next" type="button" data-bs-target="#historyCarousel"
+                                    data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Next</span>
                                 </button>
@@ -320,8 +381,8 @@
                                 <i class="bi bi-envelope fs-4 text-primary me-3 mt-1"></i>
                                 <div class="flex-grow-1">
                                     <h3 class="h5 mb-2">Email</h3>
-                                    <a href="mailto:info@moosestornadopotatoes.com" 
-                                       class="text-decoration-none text-muted text-break">
+                                    <a href="mailto:info@moosestornadopotatoes.com"
+                                        class="text-decoration-none text-muted text-break">
                                         info@moosestornadopotatoes.com
                                     </a>
                                 </div>
@@ -344,8 +405,9 @@
                                 <div class="flex-grow-1">
                                     <h3 class="h5 mb-2">Social Media</h3>
                                     <div class="d-flex gap-2">
-                                        <a href="https://www.facebook.com/profile.php?id=100094510050087" target="_blank"
-                                            rel="noopener noreferrer" class="btn btn-outline-primary btn-sm">
+                                        <a href="https://www.facebook.com/profile.php?id=100094510050087"
+                                            target="_blank" rel="noopener noreferrer"
+                                            class="btn btn-outline-primary btn-sm">
                                             <i class="bi bi-facebook"></i>
                                             <span class="ms-1 d-none d-sm-inline">Facebook</span>
                                         </a>
@@ -371,14 +433,9 @@
                     <div id="fb-container">
                         <iframe
                             src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D100094510050087&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false"
-                            width="100%" height="600" 
-                            style="border:none;overflow:hidden" 
-                            scrolling="no" 
-                            frameborder="0"
-                            sandbox="allow-scripts allow-same-origin allow-popups"
-                            referrerpolicy="no-referrer"
-                            allowfullscreen="false"
-                            loading="lazy">
+                            width="100%" height="600" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+                            sandbox="allow-scripts allow-same-origin allow-popups" referrerpolicy="no-referrer"
+                            allowfullscreen="false" loading="lazy">
                         </iframe>
                     </div>
 

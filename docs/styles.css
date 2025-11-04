@@ -42,17 +42,48 @@
 
 /* Card hover effects */
 .card {
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Responsive image handling */
 .card-img-top {
     height: 200px;
     object-fit: cover;
+}
+
+/* Gallery Section Styles */
+#gallery .card-img-top {
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+#gallery .card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+#gallery .card {
+    overflow: hidden;
+    border: none;
+}
+
+#gallery .card-body {
+    padding: 1.25rem;
+}
+
+#gallery .card-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+#gallery .card-text {
+    font-size: 0.9rem;
 }
 
 /* Custom spacing for mobile */
