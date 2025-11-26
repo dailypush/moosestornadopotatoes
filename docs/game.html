@@ -41,7 +41,8 @@
             text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
             pointer-events: none;
         }
-        #score { top: max(20px, env(safe-area-inset-top)); left: 20px; font-size: 28px; }
+        /* Moved Score down to make room for Menu button */
+        #score { top: calc(max(20px, env(safe-area-inset-top)) + 60px); left: 20px; font-size: 28px; }
         #lives { top: max(20px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); font-size: 28px; letter-spacing: 5px; }
         
         /* Moved High Score down to make room for controls */
@@ -53,8 +54,9 @@
             text-align: right;
         }
         
+        /* Moved Combo Meter down below Score */
         #comboMeter { 
-            top: calc(max(20px, env(safe-area-inset-top)) + 45px); 
+            top: calc(max(20px, env(safe-area-inset-top)) + 95px); 
             left: 20px; 
             font-size: 24px; 
             color: #FFD700; 
@@ -141,7 +143,8 @@
         
         .menu-button {
             position: absolute;
-            bottom: max(20px, env(safe-area-inset-bottom));
+            /* Moved Menu to top left */
+            top: max(20px, env(safe-area-inset-top));
             left: 20px;
             padding: 12px 20px;
             font-size: 16px;
