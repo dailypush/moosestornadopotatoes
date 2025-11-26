@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Enhanced mobile viewport: prevents zooming and handles notches -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Tornado Potatoes - Catch the Spuds!</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -10,14 +11,16 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
-            touch-action: none;
+            touch-action: none; /* Disables browser handling of gestures */
             background: #333;
             user-select: none;
+            -webkit-user-select: none;
+            overscroll-behavior: none; /* Prevents pull-to-refresh */
         }
         #gameContainer {
             position: relative;
             width: 100vw;
-            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile browsers */
             background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
             transition: background 2s ease;
         }
@@ -39,38 +42,40 @@
             text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
             pointer-events: none;
         }
-        #score { top: 20px; left: 20px; font-size: 28px; }
-        #lives { top: 20px; left: 50%; transform: translateX(-50%); font-size: 28px; letter-spacing: 5px; }
-        #highScore { top: 20px; right: 20px; font-size: 20px; opacity: 0.9; }
+        #score { top: max(20px, env(safe-area-inset-top)); left: 20px; font-size: 28px; }
+        #lives { top: max(20px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); font-size: 28px; letter-spacing: 5px; }
+        #highScore { top: max(20px, env(safe-area-inset-top)); right: 20px; font-size: 20px; opacity: 0.9; }
         #comboMeter { 
-            top: 60px; left: 20px; font-size: 24px; color: #FFD700; 
+            top: max(60px, env(safe-area-inset-top)); left: 20px; font-size: 24px; color: #FFD700; 
             transform: scale(1); transition: transform 0.1s;
             display: none;
         }
         
         .controls {
             position: absolute;
-            bottom: 20px;
+            bottom: max(20px, env(safe-area-inset-bottom));
             right: 20px;
             display: flex;
-            gap: 10px;
+            gap: 15px; /* More space between buttons */
             z-index: 10;
         }
         .icon-btn {
             background: rgba(255,255,255,0.2);
             border: none;
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 55px; /* Larger touch target */
+            height: 55px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
             transition: background 0.2s;
+            backdrop-filter: blur(5px);
+            -webkit-tap-highlight-color: transparent;
         }
-        .icon-btn:hover { background: rgba(255,255,255,0.4); }
+        .icon-btn:active { background: rgba(255,255,255,0.5); }
 
         .overlay-screen {
             position: absolute;
@@ -83,7 +88,8 @@
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.4);
             z-index: 20;
-            min-width: 320px;
+            width: 90%;
+            max-width: 350px;
         }
         
         h1 { color: #ff4d00; margin-bottom: 10px; font-size: 28px; }
@@ -91,8 +97,8 @@
         p { color: #666; margin-bottom: 20px; line-height: 1.4; font-size: 14px; }
         
         .btn-game {
-            padding: 12px 30px;
-            font-size: 18px;
+            padding: 15px 40px; /* Larger button */
+            font-size: 20px;
             font-weight: bold;
             background: #ff4d00;
             color: white;
@@ -101,8 +107,9 @@
             cursor: pointer;
             transition: transform 0.1s, background 0.2s;
             box-shadow: 0 4px 6px rgba(255, 77, 0, 0.3);
+            -webkit-tap-highlight-color: transparent;
         }
-        .btn-game:hover { background: #e64500; transform: scale(1.05); }
+        .btn-game:active { transform: scale(0.95); }
         
         .legend-grid {
             display: grid;
@@ -119,23 +126,49 @@
         
         .menu-button {
             position: absolute;
-            bottom: 20px;
+            bottom: max(20px, env(safe-area-inset-bottom));
             left: 20px;
-            padding: 8px 15px;
-            font-size: 14px;
+            padding: 12px 20px;
+            font-size: 16px;
             background: rgba(255,255,255,0.2);
             color: white;
-            border-radius: 20px;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: bold;
             backdrop-filter: blur(5px);
             transition: all 0.2s;
             z-index: 5;
+            -webkit-tap-highlight-color: transparent;
         }
-        .menu-button:hover { background: rgba(255,255,255,0.4); }
+        
+        /* Landscape Warning */
+        #landscapeWarning {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #222;
+            color: white;
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        #landscapeWarning i { font-size: 48px; margin-bottom: 20px; color: #ff4d00; }
+        
+        @media (max-height: 500px) and (orientation: landscape) {
+            #landscapeWarning { display: flex; }
+        }
     </style>
 </head>
 <body>
+    <div id="landscapeWarning">
+        <i class="bi bi-phone"></i>
+        <h3>Please Rotate Your Device</h3>
+        <p>This game is best played in portrait mode.</p>
+    </div>
+
     <div id="gameContainer">
         <div id="score" class="hud-text">Score: <span id="scoreValue">0</span></div>
         <div id="lives" class="hud-text">❤️❤️❤️</div>
@@ -145,8 +178,8 @@
         <canvas id="gameCanvas"></canvas>
         
         <div class="controls">
-            <button id="muteBtn" class="icon-btn"><i class="bi bi-volume-up-fill"></i></button>
-            <button id="pauseBtn" class="icon-btn"><i class="bi bi-pause-fill"></i></button>
+            <button id="muteBtn" class="icon-btn" aria-label="Mute Sound"><i class="bi bi-volume-up-fill"></i></button>
+            <button id="pauseBtn" class="icon-btn" aria-label="Pause Game"><i class="bi bi-pause-fill"></i></button>
         </div>
 
         <div id="startScreen" class="overlay-screen">
@@ -242,10 +275,14 @@
         window.addEventListener('resize', resizeCanvas);
 
         function resizeCanvas() {
+            // Use window dimensions but keep a max width for playability
             canvas.width = Math.min(600, window.innerWidth - 20);
+            // Ensure canvas fits within the dynamic viewport height
             canvas.height = Math.min(800, window.innerHeight - 20);
+            
             basket.y = canvas.height - basket.height - 20;
-            basket.x = canvas.width / 2 - basket.width / 2;
+            // Keep basket relative position if resizing
+            basket.x = Math.min(basket.x, canvas.width - basket.width);
         }
 
         function initGame() {
@@ -262,6 +299,7 @@
             floatingTexts = [];
             powerups = { slow: 0, wide: 0 };
             basket.width = basket.baseWidth;
+            basket.x = canvas.width / 2 - basket.width / 2;
             
             // Reset Clouds
             clouds = [];
@@ -732,20 +770,25 @@
             basket.x = Math.max(0, Math.min(canvas.width - basket.width, x - basket.width / 2));
         }
 
-        canvas.addEventListener('mousedown', (e) => { isDragging = true; updateBasketPosition(e.clientX); });
+        // Mouse Events
+        window.addEventListener('mousedown', (e) => { isDragging = true; updateBasketPosition(e.clientX); });
         window.addEventListener('mousemove', (e) => { if (isDragging) updateBasketPosition(e.clientX); });
         window.addEventListener('mouseup', () => { isDragging = false; });
 
-        canvas.addEventListener('touchstart', (e) => { 
+        // Touch Events - Attached to window for full screen control
+        window.addEventListener('touchstart', (e) => { 
             isDragging = true; 
             updateBasketPosition(e.touches[0].clientX); 
-            e.preventDefault();
+            // Only prevent default if touching the canvas area to allow button clicks
+            if(e.target === canvas || e.target === container) {
+                e.preventDefault();
+            }
         }, {passive: false});
         
         window.addEventListener('touchmove', (e) => { 
             if (isDragging) {
                 updateBasketPosition(e.touches[0].clientX);
-                e.preventDefault();
+                e.preventDefault(); // Prevent scrolling while playing
             }
         }, {passive: false});
         
