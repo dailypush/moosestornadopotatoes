@@ -11,7 +11,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             touch-action: none;
-            background: #f4f4f4;
+            background: #333;
             user-select: none;
         }
         #gameContainer {
@@ -19,28 +19,59 @@
             width: 100vw;
             height: 100vh;
             background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+            transition: background 2s ease;
         }
         #gameCanvas {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
         }
         .hud-text {
             position: absolute;
             font-weight: bold;
-            color: #333;
+            color: #fff;
             z-index: 1;
-            text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
             pointer-events: none;
         }
         #score { top: 20px; left: 20px; font-size: 28px; }
         #lives { top: 20px; left: 50%; transform: translateX(-50%); font-size: 28px; letter-spacing: 5px; }
-        #highScore { top: 20px; right: 20px; font-size: 20px; color: #666; }
+        #highScore { top: 20px; right: 20px; font-size: 20px; opacity: 0.9; }
+        #comboMeter { 
+            top: 60px; left: 20px; font-size: 24px; color: #FFD700; 
+            transform: scale(1); transition: transform 0.1s;
+            display: none;
+        }
         
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .icon-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.4); }
+
         .overlay-screen {
             position: absolute;
             top: 50%;
@@ -48,16 +79,16 @@
             transform: translate(-50%, -50%);
             text-align: center;
             background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            z-index: 2;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            z-index: 20;
             min-width: 320px;
         }
         
-        h1 { color: #ff4d00; margin-bottom: 15px; }
+        h1 { color: #ff4d00; margin-bottom: 10px; font-size: 28px; }
         h2 { color: #333; margin-bottom: 10px; }
-        p { color: #666; margin-bottom: 25px; line-height: 1.5; }
+        p { color: #666; margin-bottom: 20px; line-height: 1.4; font-size: 14px; }
         
         .btn-game {
             padding: 12px 30px;
@@ -72,30 +103,36 @@
             box-shadow: 0 4px 6px rgba(255, 77, 0, 0.3);
         }
         .btn-game:hover { background: #e64500; transform: scale(1.05); }
-        .btn-game:active { transform: scale(0.95); }
-
-        #gameOver { display: none; }
-
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: left;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #444; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.1); }
+        
         .menu-button {
             position: absolute;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
+            left: 20px;
+            padding: 8px 15px;
             font-size: 14px;
-            background: rgba(255,255,255,0.8);
-            color: #333;
+            background: rgba(255,255,255,0.2);
+            color: white;
             border-radius: 20px;
             text-decoration: none;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
             transition: all 0.2s;
             z-index: 5;
         }
-        .menu-button:hover { background: white; transform: translateX(-50%) translateY(-2px); }
-        
-        .legend-item { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; font-size: 14px; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .menu-button:hover { background: rgba(255,255,255,0.4); }
     </style>
 </head>
 <body>
@@ -103,106 +140,106 @@
         <div id="score" class="hud-text">Score: <span id="scoreValue">0</span></div>
         <div id="lives" class="hud-text">❤️❤️❤️</div>
         <div id="highScore" class="hud-text">Best: <span id="highScoreValue">0</span></div>
+        <div id="comboMeter" class="hud-text">COMBO x<span id="comboValue">1</span></div>
         
         <canvas id="gameCanvas"></canvas>
         
+        <div class="controls">
+            <button id="muteBtn" class="icon-btn"><i class="bi bi-volume-up-fill"></i></button>
+            <button id="pauseBtn" class="icon-btn"><i class="bi bi-pause-fill"></i></button>
+        </div>
+
         <div id="startScreen" class="overlay-screen">
             <h1><i class="bi bi-tornado me-2"></i>Tornado Catch</h1>
-            <p>Slide the red boat to catch potatoes!</p>
-            <div class="mb-4">
+            <p>Catch potatoes to build your combo!<br>Don't drop any!</p>
+            
+            <div class="legend-grid">
                 <div class="legend-item"><span class="dot" style="background:#F4A460"></span> Normal (+1)</div>
                 <div class="legend-item"><span class="dot" style="background:#FFD700"></span> Golden (+5)</div>
-                <div class="legend-item"><span class="dot" style="background:#3e2723"></span> Burnt (Avoid!)</div>
+                <div class="legend-item"><span class="dot" style="background:#00BFFF"></span> Ice (Slow)</div>
+                <div class="legend-item"><span class="dot" style="background:#32CD32"></span> Big (Wide)</div>
+                <div class="legend-item" style="grid-column: span 2; justify-content: center;">
+                    <span class="dot" style="background:#3e2723"></span> Burnt (Avoid!)
+                </div>
             </div>
+            
             <button id="startButton" class="btn-game">Start Game</button>
         </div>
         
+        <div id="pauseScreen" class="overlay-screen" style="display: none;">
+            <h2>Paused</h2>
+            <button id="resumeButton" class="btn-game">Resume</button>
+        </div>
+
         <div id="gameOver" class="overlay-screen">
             <h2>Game Over!</h2>
-            <p class="mb-2">You caught <span id="finalScore" style="font-weight:bold; color:#ff4d00">0</span> potatoes.</p>
-            <p id="newHighScoreMsg" style="color: #28a745; font-weight: bold; display: none;">New High Score! 🏆</p>
+            <p class="mb-2">Final Score: <span id="finalScore" style="font-weight:bold; color:#ff4d00; font-size: 24px;">0</span></p>
+            <p id="newHighScoreMsg" style="color: #28a745; font-weight: bold; display: none; margin-bottom: 15px;">New High Score! 🏆</p>
             <button id="restartButton" class="btn-game">Play Again</button>
         </div>
         
-        <a href="index.html" class="menu-button"><i class="bi bi-arrow-left"></i> Back to Menu</a>
+        <a href="index.html" class="menu-button"><i class="bi bi-arrow-left"></i> Menu</a>
     </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const startScreen = document.getElementById('startScreen');
-        const gameOverScreen = document.getElementById('gameOver');
-        const scoreElement = document.getElementById('scoreValue');
-        const livesElement = document.getElementById('lives');
-        const finalScoreElement = document.getElementById('finalScore');
-        const highScoreElement = document.getElementById('highScoreValue');
-        const newHighScoreMsg = document.getElementById('newHighScoreMsg');
-        const startButton = document.getElementById('startButton');
-        const restartButton = document.getElementById('restartButton');
+        const container = document.getElementById('gameContainer');
+        
+        // UI Elements
+        const screens = {
+            start: document.getElementById('startScreen'),
+            gameover: document.getElementById('gameOver'),
+            pause: document.getElementById('pauseScreen')
+        };
+        
+        const hud = {
+            score: document.getElementById('scoreValue'),
+            lives: document.getElementById('lives'),
+            highScore: document.getElementById('highScoreValue'),
+            combo: document.getElementById('comboValue'),
+            comboMeter: document.getElementById('comboMeter'),
+            finalScore: document.getElementById('finalScore'),
+            newHighScore: document.getElementById('newHighScoreMsg')
+        };
 
-        // Game variables
-        let score = 0;
-        let lives = 3;
-        let highScore = localStorage.getItem('tornadoHighScore') || 0;
-        let gameLoop;
-        let basket = { x: 0, y: 0, width: 70, height: 35 };
+        const buttons = {
+            start: document.getElementById('startButton'),
+            restart: document.getElementById('restartButton'),
+            resume: document.getElementById('resumeButton'),
+            pause: document.getElementById('pauseBtn'),
+            mute: document.getElementById('muteBtn')
+        };
+
+        // Game State
+        let state = {
+            score: 0,
+            lives: 3,
+            combo: 1,
+            highScore: localStorage.getItem('tornadoHighScore') || 0,
+            isPlaying: false,
+            isPaused: false,
+            isMuted: false,
+            lastTime: 0,
+            lastSpawn: 0,
+            difficulty: 1
+        };
+
+        // Entities
+        let basket = { x: 0, y: 0, width: 70, height: 35, baseWidth: 70 };
         let potatoes = [];
         let particles = [];
+        let floatingTexts = [];
         let clouds = [];
-        let lastTime = 0;
-        let lastPotatoSpawn = 0;
-        let difficultyMultiplier = 1;
+        let powerups = { slow: 0, wide: 0 };
+
+        // Audio Context
         let audioCtx = null;
 
-        // Initialize High Score Display
-        highScoreElement.textContent = highScore;
-
-        // Sound System (Synthesizer)
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
-
-        function playSound(type) {
-            if (!audioCtx) return;
-            
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            const now = audioCtx.currentTime;
-            
-            if (type === 'catch') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, now);
-                osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                osc.start(now);
-                osc.stop(now + 0.1);
-            } else if (type === 'golden') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(600, now);
-                osc.frequency.linearRampToValueAtTime(1200, now + 0.1);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } else if (type === 'hurt') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.linearRampToValueAtTime(100, now + 0.2);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-                osc.start(now);
-                osc.stop(now + 0.2);
-            }
-        }
+        // Initialization
+        hud.highScore.textContent = state.highScore;
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
 
         function resizeCanvas() {
             canvas.width = Math.min(600, window.innerWidth - 20);
@@ -213,38 +250,261 @@
 
         function initGame() {
             initAudio();
-            resizeCanvas();
-            score = 0;
-            lives = 3;
-            difficultyMultiplier = 1;
+            state.score = 0;
+            state.lives = 3;
+            state.combo = 1;
+            state.difficulty = 1;
+            state.isPlaying = true;
+            state.isPaused = false;
+            
             potatoes = [];
             particles = [];
+            floatingTexts = [];
+            powerups = { slow: 0, wide: 0 };
+            basket.width = basket.baseWidth;
             
-            // Initialize clouds
+            // Reset Clouds
             clouds = [];
-            for(let i=0; i<5; i++) {
+            for(let i=0; i<6; i++) {
                 clouds.push({
                     x: Math.random() * canvas.width,
-                    y: Math.random() * (canvas.height/2),
-                    speed: 0.2 + Math.random() * 0.3,
-                    size: 30 + Math.random() * 20
+                    y: Math.random() * (canvas.height * 0.6),
+                    speed: 0.1 + Math.random() * 0.2,
+                    size: 20 + Math.random() * 30
                 });
             }
 
             updateUI();
-            basket.x = canvas.width / 2 - basket.width / 2;
-            startScreen.style.display = 'none';
-            gameOverScreen.style.display = 'none';
-            newHighScoreMsg.style.display = 'none';
+            updateBackground();
+            
+            screens.start.style.display = 'none';
+            screens.gameover.style.display = 'none';
+            screens.pause.style.display = 'none';
+            
+            requestAnimationFrame(gameLoop);
         }
 
-        function updateUI() {
-            scoreElement.textContent = score;
-            livesElement.textContent = '❤️'.repeat(lives);
+        // --- Game Logic ---
+
+        function gameLoop(timestamp) {
+            if (!state.isPlaying) return;
+            
+            if (state.isPaused) {
+                state.lastTime = timestamp;
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            const deltaTime = timestamp - state.lastTime;
+            state.lastTime = timestamp;
+
+            update(timestamp);
+            draw();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function update(time) {
+            // Difficulty & Spawning
+            state.difficulty = 1 + (state.score * 0.01);
+            
+            // Powerup Timers
+            if (powerups.slow > 0) powerups.slow--;
+            if (powerups.wide > 0) {
+                powerups.wide--;
+                basket.width = basket.baseWidth * 1.5;
+            } else {
+                basket.width = basket.baseWidth;
+            }
+
+            // Spawn Logic
+            let spawnRate = Math.max(400, 1000 - (state.score * 10));
+            if (powerups.slow > 0) spawnRate *= 1.5; // Spawn slower when slowed
+
+            if (time - state.lastSpawn > spawnRate) {
+                spawnPotato();
+                state.lastSpawn = time;
+            }
+
+            // Update Entities
+            updatePotatoes();
+            updateParticles();
+            updateFloatingText();
+            updateClouds();
+        }
+
+        function spawnPotato() {
+            const rand = Math.random();
+            let type = 'normal';
+            
+            if (rand > 0.96) type = 'golden';      // 4%
+            else if (rand > 0.92) type = 'ice';    // 4%
+            else if (rand > 0.88) type = 'wide';   // 4%
+            else if (rand > 0.75) type = 'burnt';  // 13%
+
+            let speed = (3 + Math.random() * 2) * state.difficulty;
+            if (powerups.slow > 0) speed *= 0.5; // Slow motion effect
+
+            potatoes.push({
+                x: Math.random() * (canvas.width - 30) + 15,
+                y: -60,
+                width: 20,
+                height: 50,
+                speed: speed,
+                rotation: Math.random() * 0.5 - 0.25,
+                type: type
+            });
+        }
+
+        function updatePotatoes() {
+            for (let i = potatoes.length - 1; i >= 0; i--) {
+                let p = potatoes[i];
+                p.y += p.speed;
+                p.rotation += 0.02;
+
+                // Collision
+                if (p.y + p.height > basket.y && 
+                    p.y < basket.y + basket.height &&
+                    p.x > basket.x && 
+                    p.x < basket.x + basket.width) {
+                    
+                    handleCatch(p);
+                    potatoes.splice(i, 1);
+                    continue;
+                }
+
+                // Missed
+                if (p.y > canvas.height) {
+                    if (p.type !== 'burnt') {
+                        handleMiss();
+                    }
+                    potatoes.splice(i, 1);
+                }
+            }
+        }
+
+        function handleCatch(p) {
+            let points = 1;
+            let color = '#F4A460';
+            let text = '';
+
+            if (p.type === 'burnt') {
+                loseLife();
+                playSound('hurt');
+                createParticles(p.x, p.y, '#3e2723');
+                resetCombo();
+                return;
+            }
+
+            // Good catch
+            if (p.type === 'golden') { points = 5; color = '#FFD700'; text = 'GOLD!'; }
+            else if (p.type === 'ice') { 
+                powerups.slow = 300; // 5 seconds (approx 60fps)
+                color = '#00BFFF'; 
+                text = 'SLOW!'; 
+            }
+            else if (p.type === 'wide') { 
+                powerups.wide = 300; 
+                color = '#32CD32'; 
+                text = 'BIG!'; 
+            }
+
+            // Apply Combo
+            let totalPoints = points * state.combo;
+            state.score += totalPoints;
+            
+            // Visuals
+            playSound(p.type === 'normal' ? 'catch' : 'powerup');
+            createParticles(p.x, p.y, color);
+            addFloatingText(p.x, p.y, text || `+${totalPoints}`, color);
+            
+            // Increase Combo
+            state.combo++;
+            updateUI();
+            updateBackground();
+        }
+
+        function handleMiss() {
+            loseLife();
+            playSound('hurt');
+            resetCombo();
+            addFloatingText(basket.x + basket.width/2, canvas.height - 50, "MISS!", "#ff4d4d");
+        }
+
+        function loseLife() {
+            state.lives--;
+            updateUI();
+            if (state.lives <= 0) gameOver();
+        }
+
+        function resetCombo() {
+            state.combo = 1;
+            hud.comboMeter.style.transform = 'scale(1)';
+            updateUI();
+        }
+
+        function gameOver() {
+            state.isPlaying = false;
+            screens.gameover.style.display = 'block';
+            hud.finalScore.textContent = state.score;
+            
+            if (state.score > state.highScore) {
+                state.highScore = state.score;
+                localStorage.setItem('tornadoHighScore', state.highScore);
+                hud.highScore.textContent = state.highScore;
+                hud.newHighScore.style.display = 'block';
+                playSound('powerup');
+            } else {
+                hud.newHighScore.style.display = 'none';
+            }
+        }
+
+        // --- Visuals ---
+
+        function updateBackground() {
+            // Day -> Sunset -> Night cycle based on score
+            let phase = Math.min(1, state.score / 100);
+            
+            // Interpolate colors (Simplified)
+            if (phase < 0.5) {
+                // Day to Sunset
+                container.style.background = `linear-gradient(to bottom, #87CEEB, #E0F6FF)`;
+            } else if (phase < 0.8) {
+                // Sunset
+                container.style.background = `linear-gradient(to bottom, #FF7F50, #4B0082)`;
+            } else {
+                // Night
+                container.style.background = `linear-gradient(to bottom, #0f0c29, #302b63)`;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawClouds();
+            
+            // Draw Potatoes
+            potatoes.forEach(p => drawPotato(p));
+            
+            // Draw Basket
+            drawBasket();
+            
+            // Draw Effects
+            drawParticles();
+            drawFloatingText();
         }
 
         function drawBasket() {
             ctx.fillStyle = '#ff4d00';
+            
+            // Powerup Glow
+            if (powerups.wide > 0) {
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#32CD32';
+            } else {
+                ctx.shadowBlur = 0;
+            }
+
             ctx.beginPath();
             ctx.moveTo(basket.x, basket.y);
             ctx.lineTo(basket.x + basket.width, basket.y);
@@ -252,27 +512,11 @@
             ctx.lineTo(basket.x + 10, basket.y + basket.height);
             ctx.closePath();
             ctx.fill();
+            ctx.shadowBlur = 0; // Reset
             
             // Detail
             ctx.fillStyle = 'rgba(0,0,0,0.1)';
             ctx.fillRect(basket.x + 5, basket.y + 5, basket.width - 10, 5);
-        }
-
-        function createPotato() {
-            const rand = Math.random();
-            let type = 'normal';
-            if (rand > 0.95) type = 'golden'; // 5% chance
-            else if (rand > 0.85) type = 'burnt'; // 10% chance
-
-            return {
-                x: Math.random() * (canvas.width - 30) + 15,
-                y: -60,
-                width: 20,
-                height: 50,
-                speed: (3 + Math.random() * 2) * difficultyMultiplier,
-                rotation: Math.random() * 0.5 - 0.25,
-                type: type
-            };
         }
 
         function drawPotato(p) {
@@ -288,17 +532,14 @@
             ctx.lineTo(0, p.height + 10);
             ctx.stroke();
 
-            // Potato Colors
-            let color = '#F4A460'; // Normal
+            // Colors
+            let color = '#F4A460';
             let outline = '#D2691E';
             
-            if (p.type === 'golden') {
-                color = '#FFD700';
-                outline = '#DAA520';
-            } else if (p.type === 'burnt') {
-                color = '#3e2723';
-                outline = '#1a100e';
-            }
+            if (p.type === 'golden') { color = '#FFD700'; outline = '#DAA520'; }
+            else if (p.type === 'burnt') { color = '#3e2723'; outline = '#1a100e'; }
+            else if (p.type === 'ice') { color = '#00BFFF'; outline = '#1E90FF'; }
+            else if (p.type === 'wide') { color = '#32CD32'; outline = '#006400'; }
 
             ctx.fillStyle = color;
             ctx.strokeStyle = outline;
@@ -314,8 +555,8 @@
                 ctx.stroke();
             }
             
-            // Sparkle for golden
-            if (p.type === 'golden' && Math.random() > 0.8) {
+            // Sparkles for special ones
+            if (p.type !== 'normal' && p.type !== 'burnt' && Math.random() > 0.8) {
                 ctx.fillStyle = 'white';
                 ctx.beginPath();
                 ctx.arc(Math.random()*20-10, Math.random()*40, 2, 0, Math.PI*2);
@@ -325,16 +566,20 @@
             ctx.restore();
         }
 
+        function updateClouds() {
+            clouds.forEach(c => {
+                c.x += c.speed;
+                if (c.x > canvas.width + 50) c.x = -50;
+            });
+        }
+
         function drawClouds() {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-            clouds.forEach(cloud => {
-                cloud.x += cloud.speed;
-                if (cloud.x > canvas.width + 50) cloud.x = -50;
-                
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            clouds.forEach(c => {
                 ctx.beginPath();
-                ctx.arc(cloud.x, cloud.y, cloud.size, 0, Math.PI * 2);
-                ctx.arc(cloud.x + cloud.size*0.8, cloud.y - cloud.size*0.5, cloud.size*0.8, 0, Math.PI * 2);
-                ctx.arc(cloud.x + cloud.size*1.2, cloud.y, cloud.size*0.7, 0, Math.PI * 2);
+                ctx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
+                ctx.arc(c.x + c.size*0.8, c.y - c.size*0.5, c.size*0.8, 0, Math.PI * 2);
+                ctx.arc(c.x + c.size*1.2, c.y, c.size*0.7, 0, Math.PI * 2);
                 ctx.fill();
             });
         }
@@ -342,8 +587,7 @@
         function createParticles(x, y, color) {
             for(let i = 0; i < 8; i++) {
                 particles.push({
-                    x: x,
-                    y: y,
+                    x: x, y: y,
                     vx: (Math.random() - 0.5) * 10,
                     vy: (Math.random() - 0.5) * 10,
                     life: 1.0,
@@ -352,131 +596,146 @@
             }
         }
 
-        function drawParticles() {
+        function updateParticles() {
             for(let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
                 p.life -= 0.05;
-                
-                if(p.life <= 0) {
-                    particles.splice(i, 1);
-                    continue;
-                }
+                if(p.life <= 0) particles.splice(i, 1);
+            }
+        }
 
+        function drawParticles() {
+            particles.forEach(p => {
                 ctx.globalAlpha = p.life;
                 ctx.fillStyle = p.color;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.globalAlpha = 1.0;
+            });
+            ctx.globalAlpha = 1.0;
+        }
+
+        function addFloatingText(x, y, text, color) {
+            floatingTexts.push({ x, y, text, color, life: 1.0, vy: -2 });
+        }
+
+        function updateFloatingText() {
+            for(let i = floatingTexts.length - 1; i >= 0; i--) {
+                let t = floatingTexts[i];
+                t.y += t.vy;
+                t.life -= 0.02;
+                if(t.life <= 0) floatingTexts.splice(i, 1);
             }
         }
 
-        function gameUpdate(currentTime) {
-            const deltaTime = currentTime - lastTime;
-            lastTime = currentTime;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawClouds();
-
-            // Difficulty scaling
-            difficultyMultiplier = 1 + (score * 0.02); 
-            let currentSpawnRate = Math.max(400, 1000 - (score * 15));
-
-            if (currentTime - lastPotatoSpawn > currentSpawnRate) {
-                potatoes.push(createPotato());
-                lastPotatoSpawn = currentTime;
-            }
-
-            // Update potatoes
-            for (let i = potatoes.length - 1; i >= 0; i--) {
-                const p = potatoes[i];
-                p.y += p.speed;
-                p.rotation += 0.02;
-
-                // Collision detection
-                if (p.y + p.height > basket.y && 
-                    p.y < basket.y + basket.height &&
-                    p.x > basket.x && 
-                    p.x < basket.x + basket.width) {
-                    
-                    potatoes.splice(i, 1);
-                    
-                    if (p.type === 'burnt') {
-                        lives--;
-                        playSound('hurt');
-                        createParticles(p.x, p.y + p.height, '#3e2723');
-                    } else {
-                        let points = p.type === 'golden' ? 5 : 1;
-                        score += points;
-                        playSound(p.type === 'golden' ? 'golden' : 'catch');
-                        createParticles(p.x, p.y + p.height, p.type === 'golden' ? '#FFD700' : '#ff4d00');
-                    }
-                    
-                    updateUI();
-                    if (lives <= 0) { gameOver(); return; }
-                    continue;
-                }
-
-                // Missed potato
-                if (p.y > canvas.height) {
-                    potatoes.splice(i, 1);
-                    if (p.type !== 'burnt') {
-                        lives--;
-                        playSound('hurt');
-                        updateUI();
-                        if (lives <= 0) { gameOver(); return; }
-                    }
-                    continue;
-                }
-
-                drawPotato(p);
-            }
-
-            drawBasket();
-            drawParticles();
-            gameLoop = requestAnimationFrame(gameUpdate);
+        function drawFloatingText() {
+            ctx.font = "bold 20px Arial";
+            ctx.textAlign = "center";
+            floatingTexts.forEach(t => {
+                ctx.globalAlpha = t.life;
+                ctx.fillStyle = t.color;
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.strokeText(t.text, t.x, t.y);
+                ctx.fillText(t.text, t.x, t.y);
+            });
+            ctx.globalAlpha = 1.0;
         }
 
-        function gameOver() {
-            cancelAnimationFrame(gameLoop);
-            gameOverScreen.style.display = 'block';
-            finalScoreElement.textContent = score;
+        function updateUI() {
+            hud.score.textContent = state.score;
+            hud.lives.textContent = '❤️'.repeat(state.lives);
             
-            if (score > highScore) {
-                highScore = score;
-                localStorage.setItem('tornadoHighScore', highScore);
-                highScoreElement.textContent = highScore;
-                newHighScoreMsg.style.display = 'block';
-                playSound('golden');
+            if (state.combo > 1) {
+                hud.comboMeter.style.display = 'block';
+                hud.combo.textContent = state.combo;
+                hud.comboMeter.style.transform = 'scale(1.2)';
+                setTimeout(() => hud.comboMeter.style.transform = 'scale(1)', 100);
+            } else {
+                hud.comboMeter.style.display = 'none';
             }
         }
 
-        // Input Handling
-        startButton.addEventListener('click', () => {
-            initGame();
-            gameLoop = requestAnimationFrame(gameUpdate);
+        // --- Audio ---
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playSound(type) {
+            if (state.isMuted || !audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            
+            if (type === 'catch') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'powerup') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.linearRampToValueAtTime(1200, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'hurt') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+        }
+
+        // --- Input ---
+        buttons.start.addEventListener('click', initGame);
+        buttons.restart.addEventListener('click', initGame);
+        
+        buttons.pause.addEventListener('click', () => {
+            if (!state.isPlaying) return;
+            state.isPaused = !state.isPaused;
+            screens.pause.style.display = state.isPaused ? 'block' : 'none';
+            buttons.pause.innerHTML = state.isPaused ? '<i class="bi bi-play-fill"></i>' : '<i class="bi bi-pause-fill"></i>';
         });
 
-        restartButton.addEventListener('click', () => {
-            initGame();
-            gameLoop = requestAnimationFrame(gameUpdate);
+        buttons.resume.addEventListener('click', () => {
+            state.isPaused = false;
+            screens.pause.style.display = 'none';
+            buttons.pause.innerHTML = '<i class="bi bi-pause-fill"></i>';
         });
 
+        buttons.mute.addEventListener('click', () => {
+            state.isMuted = !state.isMuted;
+            buttons.mute.innerHTML = state.isMuted ? '<i class="bi bi-volume-mute-fill"></i>' : '<i class="bi bi-volume-up-fill"></i>';
+        });
+
+        // Controls
         let isDragging = false;
         function updateBasketPosition(clientX) {
+            if (state.isPaused) return;
             const rect = canvas.getBoundingClientRect();
             const x = clientX - rect.left;
             basket.x = Math.max(0, Math.min(canvas.width - basket.width, x - basket.width / 2));
         }
 
-        // Mouse Events
         canvas.addEventListener('mousedown', (e) => { isDragging = true; updateBasketPosition(e.clientX); });
         window.addEventListener('mousemove', (e) => { if (isDragging) updateBasketPosition(e.clientX); });
         window.addEventListener('mouseup', () => { isDragging = false; });
 
-        // Touch Events
         canvas.addEventListener('touchstart', (e) => { 
             isDragging = true; 
             updateBasketPosition(e.touches[0].clientX); 
@@ -492,8 +751,6 @@
         
         window.addEventListener('touchend', () => { isDragging = false; });
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
     </script>
 </body>
 </html>
