@@ -374,7 +374,7 @@
             try { unlockAudio(); } catch(e) { console.log("Audio init deferred"); }
             
             state.score = 0;
-            state.lives = 3;
+            state.lives = 5; // Increased from 3
             state.combo = 1;
             state.difficulty = 1;
             state.isPlaying = true;
@@ -430,7 +430,7 @@
 
         function update(time) {
             // Difficulty & Spawning
-            state.difficulty = 1 + (state.score * 0.01);
+            state.difficulty = 1 + (state.score * 0.001); // Slower difficulty scaling
             
             // NEW: Handle Button Movement
             const moveSpeed = 5 * (canvas.width / 400); // Reduced speed to 5 for better control
@@ -483,7 +483,7 @@
             }
 
             // Spawn Logic
-            let spawnRate = Math.max(400, 1000 - (state.score * 10));
+            let spawnRate = Math.max(400, 1000 - (state.score * 2)); // Slower spawn rate increase
             if (powerups.slow > 0) spawnRate *= 1.5; // Spawn slower when slowed
 
             if (time - state.lastSpawn > spawnRate) {
@@ -505,10 +505,10 @@
             if (rand > 0.96) type = 'golden';      // 4%
             else if (rand > 0.92) type = 'ice';    // 4%
             else if (rand > 0.88) type = 'wide';   // 4%
-            else if (rand > 0.75) type = 'burnt';  // 13%
+            else if (rand > 0.80) type = 'burnt';  // 8% (Reduced from 13%)
 
             // Base speed calculation
-            let speed = (3 + Math.random() * 2) * state.difficulty;
+            let speed = (2 + Math.random() * 2) * state.difficulty;
 
             potatoes.push({
                 x: Math.random() * (canvas.width - 30) + 15,
