@@ -178,6 +178,61 @@
         @media (max-height: 500px) and (orientation: landscape) {
             #landscapeWarning { display: flex; }
         }
+
+        /* NEW: Touch Controls Styling */
+        #touchControls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 140px; /* Dedicated control area */
+            background: #222; /* Gray bar */
+            border-top: 2px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 20;
+            touch-action: none;
+        }
+
+        .touch-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05); /* Faint background */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            color: rgba(255, 255, 255, 0.3); /* Faint icon */
+            font-size: 32px;
+            backdrop-filter: blur(2px);
+            pointer-events: auto;
+            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            transition: transform 0.1s, background 0.1s, color 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .touch-btn:active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: scale(0.95);
+        }
+
+        /* Shift canvas up on mobile to make room for the bar */
+        @media (max-width: 1023px) {
+            #gameCanvas {
+                top: calc(50% - 70px); /* Shift center up by half the bar height */
+            }
+        }
+
+        /* Hide touch controls on large screens */
+        @media (min-width: 1024px) {
+            #touchControls { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -230,6 +285,12 @@
         </div>
         
         <a href="index.html" class="menu-button"><i class="bi bi-arrow-left"></i> Menu</a>
+
+        <!-- NEW: Touch Controls -->
+        <div id="touchControls">
+            <button id="btnLeft" class="touch-btn" aria-label="Move Left"><i class="bi bi-caret-left-fill"></i></button>
+            <button id="btnRight" class="touch-btn" aria-label="Move Right"><i class="bi bi-caret-right-fill"></i></button>
+        </div>
     </div>
 
     <script>
@@ -273,7 +334,9 @@
             isMuted: false,
             lastTime: 0,
             lastSpawn: 0,
-            difficulty: 1
+            difficulty: 1,
+            moveLeft: false,  // NEW
+            moveRight: false  // NEW
         };
 
         // Entities
@@ -293,9 +356,13 @@
         window.addEventListener('resize', resizeCanvas);
 
         function resizeCanvas() {
+            const isMobile = window.innerWidth < 1024;
+            const bottomPadding = isMobile ? 160 : 20; // 140px bar + 20px margin
+
             canvas.width = Math.min(600, window.innerWidth - 20);
-            canvas.height = Math.min(800, window.innerHeight - 20);
-            basket.y = canvas.height - basket.height - 20;
+            canvas.height = Math.min(800, window.innerHeight - bottomPadding);
+            
+            basket.y = canvas.height - basket.height - 10;
             basket.x = Math.min(basket.x, canvas.width - basket.width);
         }
 
@@ -362,6 +429,17 @@
             // Difficulty & Spawning
             state.difficulty = 1 + (state.score * 0.01);
             
+            // NEW: Handle Button Movement
+            const moveSpeed = 5 * (canvas.width / 400); // Reduced speed to 5 for better control
+            if (state.moveLeft) {
+                basket.x -= moveSpeed;
+            }
+            if (state.moveRight) {
+                basket.x += moveSpeed;
+            }
+            // Clamp basket to screen
+            basket.x = Math.max(0, Math.min(canvas.width - basket.width, basket.x));
+
             // Powerup Timers
             if (powerups.slow > 0) powerups.slow--;
             if (powerups.wide > 0) {
@@ -789,6 +867,35 @@
         buttons.start.addEventListener('click', initGame);
         buttons.restart.addEventListener('click', initGame);
         
+        // NEW: Touch Button Logic
+        const btnLeft = document.getElementById('btnLeft');
+        const btnRight = document.getElementById('btnRight');
+
+        const handleBtnStart = (dir) => (e) => { 
+            e.preventDefault(); // Prevent mouse emulation
+            if (dir === 'left') state.moveLeft = true;
+            if (dir === 'right') state.moveRight = true;
+        };
+        
+        const handleBtnEnd = (dir) => (e) => { 
+            e.preventDefault();
+            if (dir === 'left') state.moveLeft = false;
+            if (dir === 'right') state.moveRight = false;
+        };
+
+        // Attach events for both Touch and Mouse (for testing on desktop)
+        btnLeft.addEventListener('touchstart', handleBtnStart('left'));
+        btnLeft.addEventListener('touchend', handleBtnEnd('left'));
+        btnLeft.addEventListener('mousedown', handleBtnStart('left'));
+        btnLeft.addEventListener('mouseup', handleBtnEnd('left'));
+        btnLeft.addEventListener('mouseleave', handleBtnEnd('left')); // Stop if finger slides off
+
+        btnRight.addEventListener('touchstart', handleBtnStart('right'));
+        btnRight.addEventListener('touchend', handleBtnEnd('right'));
+        btnRight.addEventListener('mousedown', handleBtnStart('right'));
+        btnRight.addEventListener('mouseup', handleBtnEnd('right'));
+        btnRight.addEventListener('mouseleave', handleBtnEnd('right'));
+
         buttons.pause.addEventListener('click', () => {
             if (!state.isPlaying) return;
             state.isPaused = !state.isPaused;
