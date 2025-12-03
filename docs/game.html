@@ -336,7 +336,8 @@
             lastSpawn: 0,
             difficulty: 1,
             moveLeft: false,  // NEW
-            moveRight: false  // NEW
+            moveRight: false, // NEW
+            tornado: { active: false, timer: 0, warning: false, x: 0 } // NEW
         };
 
         // Entities
@@ -346,6 +347,8 @@
         let floatingTexts = [];
         let clouds = [];
         let powerups = { slow: 0, wide: 0 };
+        let lastBasketX = 0;
+        let shake = { intensity: 0, duration: 0 };
 
         // Audio Context
         let audioCtx = null;
@@ -449,6 +452,36 @@
                 basket.width = basket.baseWidth;
             }
 
+            // Shake Decay
+            if (shake.duration > 0) {
+                shake.duration--;
+            }
+
+            // Tornado Logic
+            if (!state.tornado.active && !state.tornado.warning) {
+                // Chance increases with score
+                if (Math.random() < 0.0005 + (state.score * 0.00001)) { 
+                    state.tornado.warning = true;
+                    state.tornado.timer = 180; // 3 seconds warning
+                    playSound('warning');
+                    addFloatingText(canvas.width/2, canvas.height/2, "TORNADO WARNING!", "#ff0000");
+                }
+            } else if (state.tornado.warning) {
+                state.tornado.timer--;
+                if (state.tornado.timer <= 0) {
+                    state.tornado.warning = false;
+                    state.tornado.active = true;
+                    state.tornado.timer = 600; // 10 seconds duration
+                    state.tornado.x = canvas.width / 2;
+                    playSound('tornado');
+                }
+            } else if (state.tornado.active) {
+                state.tornado.timer--;
+                if (state.tornado.timer <= 0) {
+                    state.tornado.active = false;
+                }
+            }
+
             // Spawn Logic
             let spawnRate = Math.max(400, 1000 - (state.score * 10));
             if (powerups.slow > 0) spawnRate *= 1.5; // Spawn slower when slowed
@@ -499,6 +532,13 @@
                 p.y += currentSpeed;
                 p.rotation += 0.02;
 
+                // Tornado Effect
+                if (state.tornado.active) {
+                    let dx = (state.tornado.x - p.x) * 0.02; // Pull towards center
+                    p.x += dx + Math.sin(p.y * 0.1 + state.lastTime * 0.01) * 5; // Wobbly wind
+                    p.rotation += 0.2; // Spin faster
+                }
+
                 // Collision
                 if (p.y + p.height > basket.y && 
                     p.y < basket.y + basket.height &&
@@ -529,6 +569,7 @@
                 loseLife();
                 playSound('hurt');
                 createParticles(p.x, p.y, '#3e2723');
+                triggerShake(10, 20); // Shake screen
                 resetCombo();
                 return;
             }
@@ -560,10 +601,10 @@
             updateUI();
             updateBackground();
         }
-
         function handleMiss() {
             loseLife();
             playSound('hurt');
+            triggerShake(5, 10); // Small shake on miss
             resetCombo();
             addFloatingText(basket.x + basket.width/2, canvas.height - 50, "MISS!", "#ff4d4d");
         }
@@ -597,7 +638,6 @@
         }
 
         // --- Visuals ---
-
         function updateBackground() {
             let phase = Math.min(1, state.score / 100);
             if (phase < 0.5) {
@@ -609,16 +649,66 @@
             }
         }
 
+        function triggerShake(intensity, duration) {
+            shake.intensity = intensity;
+            shake.duration = duration;
+        }
+
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.save();
+            // Apply Screen Shake
+            if (shake.duration > 0) {
+                const dx = (Math.random() - 0.5) * shake.intensity;
+                const dy = (Math.random() - 0.5) * shake.intensity;
+                ctx.translate(dx, dy);
+            }
+
             drawClouds();
+            drawTornado();
             potatoes.forEach(p => drawPotato(p));
             drawBasket();
             drawParticles();
             drawFloatingText();
+
+            ctx.restore();
+        }
+        function drawTornado() {
+            if (!state.tornado.active && !state.tornado.warning) return;
+            
+            ctx.save();
+            ctx.globalAlpha = state.tornado.warning ? 0.3 : 0.6;
+            if (state.tornado.warning && Math.floor(Date.now() / 200) % 2 === 0) ctx.globalAlpha = 0.1; // Flash
+
+            const tX = state.tornado.x || canvas.width / 2;
+            const time = Date.now() / 100;
+            
+            ctx.fillStyle = '#888';
+            for (let i = 0; i < 20; i++) {
+                const y = canvas.height - (i * 40);
+                const width = 20 + (i * 15);
+                const xOffset = Math.sin(time + i * 0.5) * 20;
+                
+                ctx.beginPath();
+                ctx.ellipse(tX + xOffset, y, width, 10, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
         }
 
         function drawBasket() {
+            // Calculate tilt based on movement speed
+            const velocity = basket.x - lastBasketX;
+            const tilt = Math.max(-0.2, Math.min(0.2, velocity * 0.01)); // Cap tilt
+            lastBasketX = basket.x;
+
+            ctx.save();
+            // Pivot at bottom center of basket
+            ctx.translate(basket.x + basket.width / 2, basket.y + basket.height);
+            ctx.rotate(tilt);
+            ctx.translate(-(basket.x + basket.width / 2), -(basket.y + basket.height));
+
             ctx.fillStyle = '#ff4d00';
             if (powerups.wide > 0) {
                 ctx.shadowBlur = 15;
@@ -638,6 +728,8 @@
             
             ctx.fillStyle = 'rgba(0,0,0,0.1)';
             ctx.fillRect(basket.x + 5, basket.y + 5, basket.width - 10, 5);
+
+            ctx.restore();
         }
 
         function drawPotato(p) {
@@ -826,13 +918,13 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
 
             try {
+                const now = audioCtx.currentTime;
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
+                
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                
-                const now = audioCtx.currentTime;
-                
+
                 if (type === 'catch') {
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(400, now);
@@ -841,14 +933,6 @@
                     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
                     osc.start(now);
                     osc.stop(now + 0.1);
-                } else if (type === 'powerup') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(600, now);
-                    osc.frequency.linearRampToValueAtTime(1200, now + 0.2);
-                    gain.gain.setValueAtTime(0.1, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
-                    osc.start(now);
-                    osc.stop(now + 0.3);
                 } else if (type === 'hurt') {
                     osc.type = 'sawtooth';
                     osc.frequency.setValueAtTime(150, now);
@@ -857,6 +941,31 @@
                     gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
                     osc.start(now);
                     osc.stop(now + 0.2);
+                } else if (type === 'powerup') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.linearRampToValueAtTime(1200, now + 0.2);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'warning') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.setValueAtTime(0, now + 0.1);
+                    osc.frequency.setValueAtTime(400, now + 0.2);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                } else if (type === 'tornado') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(50, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 2.0);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 2.0);
+                    osc.start(now);
+                    osc.stop(now + 2.0);
                 }
             } catch(e) {
                 // Ignore audio errors
@@ -951,6 +1060,7 @@
         
         window.addEventListener('touchend', () => { isDragging = false; });
 
+        console.log("Script loaded");
     </script>
 </body>
 </html>
