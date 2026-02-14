@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting…</title>
+
+  <!-- Future analytics goes here -->
+  <!-- Example: Google Analytics script later -->
+
+  <script>
+    // Destination URL — change anytime
+    const DESTINATION = "https://moosestornadopotatoes.com";
+
+    // Delay slightly so analytics can log
+    setTimeout(() => {
+      window.location.replace(DESTINATION);
+    }, 400);
+  </script>
+
+  <meta name="robots" content="noindex">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      padding-top: 40px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  Redirecting…
+  <br><br>
+  <a id="manual" href="#">Tap here if not redirected</a>
+
+  <script>
+    document.getElementById("manual").href = DESTINATION;
+  </script>
+</body>
+</html>
