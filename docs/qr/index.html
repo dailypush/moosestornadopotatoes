@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WASM QR Generator</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; line-height: 1.35; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    input[type="text"] { width: min(820px, 100%); padding: 10px; font-size: 16px; }
+    input[type="number"] { width: 110px; padding: 8px; }
+    button { padding: 10px 14px; font-size: 14px; cursor: pointer; }
+    .box { margin-top: 18px; padding: 14px; border: 1px solid #ddd; border-radius: 12px; }
+    #svgWrap { max-width: 420px; }
+    #svgWrap svg { width: 100%; height: auto; display: block; }
+    .muted { color: #666; font-size: 13px; }
+    .err { color: #b00020; }
+  </style>
+</head>
+<body>
+  <h1>WASM QR Generator</h1>
+  <p class="muted">Client-side QR generation using <code>zxing-wasm</code> (WASM). </p>
+
+  <div class="box">
+    <div class="row">
+      <input id="text" type="text" value="https://qr.example.com/" />
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <label>Size (px)
+        <input id="size" type="number" min="128" max="2048" step="32" value="512" />
+      </label>
+
+      <label>Margin
+        <input id="margin" type="number" min="0" max="10" step="1" value="2" />
+      </label>
+
+      <button id="gen">Generate</button>
+      <button id="dlSvg" disabled>Download SVG</button>
+      <button id="dlPng" disabled>Download PNG</button>
+    </div>
+
+    <div id="status" class="muted" style="margin-top:10px;"></div>
+    <div id="error" class="err" style="margin-top:6px;"></div>
+  </div>
+
+  <div class="box">
+    <div class="row" style="justify-content: space-between;">
+      <strong>Preview</strong>
+      <span class="muted" id="meta"></span>
+    </div>
+    <div id="svgWrap" style="margin-top:12px;"></div>
+    <canvas id="canvas" style="display:none;"></canvas>
+  </div>
+
+  <script type="module">
+    import { writeBarcode } from "https://esm.sh/zxing-wasm@2.1.0/writer";
+
+    const elText = document.getElementById("text");
+    const elSize = document.getElementById("size");
+    const elMargin = document.getElementById("margin");
+    const elGen = document.getElementById("gen");
+    const elDlSvg = document.getElementById("dlSvg");
+    const elDlPng = document.getElementById("dlPng");
+    const elSvgWrap = document.getElementById("svgWrap");
+    const elStatus = document.getElementById("status");
+    const elError = document.getElementById("error");
+    const elMeta = document.getElementById("meta");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let lastSvgString = null;
+
+    function setError(msg) { elError.textContent = msg || ""; }
+    function setStatus(msg) { elStatus.textContent = msg || ""; }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function svgStringToBlob(svgString) {
+      return new Blob([svgString], { type: "image/svg+xml" });
+    }
+
+    async function svgToPngBlob(svgString, sizePx) {
+      const svgBlob = svgStringToBlob(svgString);
+      const svgUrl = URL.createObjectURL(svgBlob);
+
+      const img = new Image();
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = svgUrl;
+      });
+
+      canvas.width = sizePx;
+      canvas.height = sizePx;
+
+      // white background helps printing/scanning
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.drawImage(img, 0, 0, sizePx, sizePx);
+      URL.revokeObjectURL(svgUrl);
+
+      return await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+    }
+
+    async function generate() {
+      setError("");
+      setStatus("Generating…");
+
+      const text = elText.value.trim();
+      if (!text) { setStatus(""); setError("Enter a URL or text."); return; }
+
+      const size = Math.max(128, Math.min(2048, Number(elSize.value || 512)));
+      const margin = Math.max(0, Math.min(10, Number(elMargin.value || 2)));
+
+      const result = await writeBarcode(text, {
+        format: "QRCode",
+        width: size,
+        height: size,
+        margin
+      });
+
+      if (result?.error) { setStatus(""); setError(String(result.error)); return; }
+      if (!result?.svg) { setStatus(""); setError("No SVG returned."); return; }
+
+      lastSvgString = result.svg;
+      elSvgWrap.innerHTML = result.svg;
+
+      elDlSvg.disabled = false;
+      elDlPng.disabled = false;
+      elMeta.textContent = `${size}px • margin ${margin}`;
+      setStatus("Done.");
+    }
+
+    elGen.addEventListener("click", () => generate().catch(err => setError(String(err))));
+    elText.addEventListener("keydown", (e) => { if (e.key === "Enter") elGen.click(); });
+
+    elDlSvg.addEventListener("click", () => {
+      if (!lastSvgString) return;
+      downloadBlob(svgStringToBlob(lastSvgString), "qr.svg");
+    });
+
+    elDlPng.addEventListener("click", async () => {
+      if (!lastSvgString) return;
+      setStatus("Rendering PNG…");
+      const size = Math.max(128, Math.min(2048, Number(elSize.value || 512)));
+      const pngBlob = await svgToPngBlob(lastSvgString, size);
+      downloadBlob(pngBlob, "qr.png");
+      setStatus("Done.");
+    });
+
+    // Auto-generate once
+    generate().catch(err => setError(String(err)));
+  </script>
+</body>
+</html>
