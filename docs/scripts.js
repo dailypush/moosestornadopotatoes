@@ -113,12 +113,12 @@ async function loadEvents() {
         eventsData = {
             events: [
                 {
-                    name: "Mentor Rocks",
-                    location: "Mentor Civic Amphitheater", 
-                    date: "2025-07-27",
-                    displayDate: "July 27",
-                    time: "5:00 PM - 10:00 PM",
-                    description: "Serving starts at 5pm, Concert at 7pm",
+                    name: "FOREVER SEGER",
+                    location: "Mentor Civic Amphitheater (8600 Munson Rd)",
+                    date: "2026-06-02",
+                    displayDate: "June 2",
+                    time: "7:00 PM - 9:00 PM",
+                    description: "Bob Seger tribute",
                     status: "upcoming"
                 }
             ]
@@ -150,53 +150,72 @@ function renderEvents() {
 
         let eventsHTML = '';
         
-        // Filter and sort upcoming events chronologically
+        // Filter upcoming events
         const upcomingEvents = eventsData.events
-            .filter(event => event.status === 'upcoming')
-            .sort((a, b) => {
-                // Parse dates for comparison (handle both ISO format and fallback)
-                const dateA = new Date(a.date || a.displayDate);
-                const dateB = new Date(b.date || b.displayDate);
-                return dateA - dateB;
-            });
-        
-        console.log('Upcoming events (sorted):', upcomingEvents);
+            .filter(event => event.status === 'upcoming');
         
         if (upcomingEvents.length === 0) {
             eventsHTML = '<p class="text-muted">No upcoming events at this time.</p>';
         } else {
-            eventsHTML = '<div class="list-group list-group-flush">';
+            // Group events by location
+            const eventsByLocation = {};
             
             upcomingEvents.forEach(event => {
-                // Use displayDate if available, otherwise fall back to date
-                const displayDate = event.displayDate || event.date;
-                const featuredClass = event.featured ? ' border-warning' : '';
-                const recurringBadge = event.recurring ? `<span class="badge bg-success rounded-pill me-2 small">Weekly</span>` : '';
-                const websiteLink = event.website ? `<a href="${event.website}" target="_blank" class="small text-primary text-decoration-none"><i class="bi bi-link-45deg me-1"></i>Event Website</a>` : '';
-                
-                eventsHTML += `
-                    <div class="list-group-item px-0${featuredClass}">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1">
-                                <h5 class="h6 mb-1">${event.name}</h5>
-                                <p class="small text-muted mb-1"><i class="bi bi-geo-alt me-1"></i>${event.location}</p>
-                                <p class="small text-muted mb-1"><i class="bi bi-clock me-1"></i>${event.time}</p>
-                                <p class="small text-success mb-1">
-                                    <i class="bi bi-info-circle me-1"></i>
-                                    ${event.description}
-                                </p>
-                                ${websiteLink ? `<p class="mb-0">${websiteLink}</p>` : ''}
-                            </div>
-                            <div class="text-end">
-                                ${recurringBadge}
-                                <span class="badge bg-primary rounded-pill">${displayDate}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                const location = event.location || 'Unknown Location';
+                if (!eventsByLocation[location]) {
+                    eventsByLocation[location] = [];
+                }
+                eventsByLocation[location].push(event);
             });
             
-            eventsHTML += '</div>';
+            // Sort events within each location chronologically
+            Object.keys(eventsByLocation).forEach(location => {
+                eventsByLocation[location].sort((a, b) => {
+                    const dateA = new Date(a.date || a.displayDate);
+                    const dateB = new Date(b.date || b.displayDate);
+                    return dateA - dateB;
+                });
+            });
+            
+            console.log('Events grouped by location:', eventsByLocation);
+            
+            eventsHTML = '';
+            
+            // Render each location group
+            Object.keys(eventsByLocation).sort().forEach(location => {
+                eventsHTML += `<div class="mb-5">
+                    <h4 class="h5 mb-3 text-primary"><i class="bi bi-geo-alt me-2"></i>${location}</h4>
+                    <div class="list-group list-group-flush">`;
+                
+                eventsByLocation[location].forEach(event => {
+                    const displayDate = event.displayDate || event.date;
+                    const featuredClass = event.featured ? ' border-warning' : '';
+                    const recurringBadge = event.recurring ? `<span class="badge bg-success rounded-pill me-2 small">Weekly</span>` : '';
+                    const websiteLink = event.website ? `<a href="${event.website}" target="_blank" class="small text-primary text-decoration-none"><i class="bi bi-link-45deg me-1"></i>Event Website</a>` : '';
+                    
+                    eventsHTML += `
+                        <div class="list-group-item px-0${featuredClass}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h5 class="h6 mb-1">${event.name}</h5>
+                                    <p class="small text-muted mb-1"><i class="bi bi-clock me-1"></i>${event.time}</p>
+                                    <p class="small text-success mb-1">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        ${event.description}
+                                    </p>
+                                    ${websiteLink ? `<p class="mb-0">${websiteLink}</p>` : ''}
+                                </div>
+                                <div class="text-end">
+                                    ${recurringBadge}
+                                    <span class="badge bg-primary rounded-pill">${displayDate}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                eventsHTML += '</div></div>';
+            });
         }
 
         console.log('Setting eventsContainer innerHTML');

@@ -1,101 +1,148 @@
 {
     "events": [
         {
-            "name": "Chardon Food Truck Friday",
-            "location": "Chardon Square",
-            "date": "2025-07-11",
-            "displayDate": "July 11",
-            "time": "11:00 AM - 7:00 PM",
-            "description": "Weekly food truck gathering in downtown Chardon",
-            "status": "upcoming",
-            "recurring": "weekly"
-        },
-        {
-            "name": "Chardon Food Truck Friday",
-            "location": "Chardon Square", 
-            "date": "2025-07-18",
-            "displayDate": "July 18",
-            "time": "11:00 AM - 7:00 PM",
-            "description": "Weekly food truck gathering in downtown Chardon",
-            "status": "upcoming",
-            "recurring": "weekly"
-        },
-        {
-            "name": "Chardon Food Truck Friday",
-            "location": "Chardon Square",
-            "date": "2025-07-25",
-            "displayDate": "July 25",
-            "time": "11:00 AM - 7:00 PM", 
-            "description": "Weekly food truck gathering in downtown Chardon",
-            "status": "upcoming",
-            "recurring": "weekly"
-        },
-        {
-            "name": "Mentor Rocks Festival",
-            "location": "Mentor Civic Amphitheater",
-            "date": "2025-07-27",
-            "displayDate": "July 27",
-            "time": "5:00 PM - 10:00 PM",
-            "description": "Live music festival with food vendors - serving starts at 5pm",
-            "status": "upcoming",
-            "website": "https://mentorrocks.com"
-        },
-        {
-            "name": "Burton Log Cabin Days",
-            "location": "Burton Village Square",
-            "date": "2025-08-02",
-            "displayDate": "August 2-3",
-            "time": "10:00 AM - 6:00 PM",
-            "description": "Historic village celebration with craft vendors and food",
+            "name": "FOREVER SEGER",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-06-02",
+            "displayDate": "June 2",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "Bob Seger tribute",
             "status": "upcoming"
         },
         {
-            "name": "Cleveland Food Truck Festival",
-            "location": "Lakefront Stadium, Cleveland",
-            "date": "2025-08-15",
+            "name": "Tennessee Whiskey & Ultimate Eric Church",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-06-09",
+            "displayDate": "June 9",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "Chris Stapleton & Eric Church tributes",
+            "status": "upcoming"
+        },
+        {
+            "name": "Fleetwood Gold",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-06-16",
+            "displayDate": "June 16",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "Fleetwood Mac tribute",
+            "status": "upcoming"
+        },
+        {
+            "name": "Crazy Train",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-06-23",
+            "displayDate": "June 23",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "Ozzy Osbourne tribute",
+            "status": "upcoming"
+        },
+        {
+            "name": "Phillip Phillips",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-06-30",
+            "displayDate": "June 30",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "National Recording Artist / American Idol Winner",
+            "status": "upcoming"
+        },
+        {
+            "name": "Hotel California",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-07-04",
+            "displayDate": "July 4",
+            "time": "7:00 PM - 10:00 PM",
+            "description": "Eagles tribute - Independence Day Celebration & Fireworks",
+            "status": "upcoming"
+        },
+        {
+            "name": "New World Men",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-07-07",
+            "displayDate": "July 7",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "Rush tribute",
+            "status": "upcoming"
+        },
+        {
+            "name": "Night Ranger",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-07-14",
+            "displayDate": "July 14",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "National Recording Artist",
+            "status": "upcoming"
+        },
+        {
+            "name": "Red Not Chili Peppers",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-07-21",
+            "displayDate": "July 21",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "Red Hot Chili Peppers tribute",
+            "status": "upcoming"
+        },
+        {
+            "name": "Creep & Hollow",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-07-28",
+            "displayDate": "July 28",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "Stone Temple Pilots & Alice in Chains tributes",
+            "status": "upcoming"
+        },
+        {
+            "name": "REO Survivor",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-08-04",
+            "displayDate": "August 4",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "REO Speedwagon & Survivor tribute",
+            "status": "upcoming"
+        },
+        {
+            "name": "Rising Country Artist",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-08-11",
+            "displayDate": "August 11",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "National Recording Artist - TBA",
+            "status": "upcoming"
+        },
+        {
+            "name": "Just Like Pink",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-08-14",
+            "displayDate": "August 14",
+            "time": "5:00 PM - 11:00 PM",
+            "description": "Pink tribute - CityFest Friday",
+            "status": "upcoming"
+        },
+        {
+            "name": "7 Summers",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-08-15",
             "displayDate": "August 15",
-            "time": "12:00 PM - 8:00 PM", 
-            "description": "Regional food truck gathering with live music and family activities",
+            "time": "12:00 PM - 11:00 PM",
+            "description": "Morgan Wallen tribute - CityFest Saturday",
             "status": "upcoming"
         },
         {
-            "name": "Geauga County Fair",
-            "location": "Burton Fairgrounds", 
-            "date": "2025-09-02",
-            "displayDate": "September 2-8",
-            "time": "11:00 AM - 9:00 PM",
-            "description": "Annual county fair featuring local food vendors and agriculture exhibits",
-            "status": "upcoming",
-            "website": "https://geaugafair.com"
-        },
-        {
-            "name": "Punderson State Park Fall Festival",
-            "location": "Punderson State Park",
-            "date": "2025-09-20",
-            "displayDate": "September 20-21",
-            "time": "10:00 AM - 5:00 PM",
-            "description": "Fall celebration with food trucks and outdoor activities",
+            "name": "Abba Revisited",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-08-18",
+            "displayDate": "August 18",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "ABBA tribute",
             "status": "upcoming"
         },
         {
-            "name": "Chardon Oktoberfest",
-            "location": "Chardon Square",
-            "date": "2025-10-05",
-            "displayDate": "October 5-6",
-            "time": "12:00 PM - 8:00 PM",
-            "description": "German-themed festival with traditional food and beer",
+            "name": "ESCAPE",
+            "location": "Mentor Civic Amphitheater (8600 Munson Rd)",
+            "date": "2026-08-25",
+            "displayDate": "August 25",
+            "time": "7:00 PM - 9:00 PM",
+            "description": "Journey tribute",
             "status": "upcoming"
-        },
-        {
-            "name": "Chardon Maple Festival",
-            "location": "Chardon Square",
-            "date": "2026-04-26",
-            "displayDate": "April 26-27, 2026",
-            "time": "10:00 AM - 6:00 PM",
-            "description": "Annual maple syrup celebration - Chardon's biggest festival!",
-            "status": "upcoming",
-            "featured": true,
-            "website": "https://chardonmaplefest.com"
         }
     ]
 }
