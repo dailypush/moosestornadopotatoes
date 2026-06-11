@@ -134,6 +134,25 @@ Copy this template for each new menu item:
 }
 ```
 
+## Managing Facebook Highlights
+
+The homepage features a "Latest Updates" section that loads curated Facebook highlight cards from `docs/facebook-posts.json`. Use this for the posts and conversations you want to feature on the website.
+
+### Facebook Highlight Template
+
+```json
+{
+    "category": "On Facebook",
+    "title": "Post or Update Title",
+    "description": "Short summary of what people will find in the Facebook post.",
+    "link": "https://www.facebook.com/profile.php?id=100094510050087",
+    "icon": "bi-facebook",
+    "featured": true
+}
+```
+
+Use `featured: true` for the card that should get the orange top border. Icons use Bootstrap Icons class names.
+
 ## Managing History Timeline
 
 The website features a dynamic history carousel that loads from `docs/history.json`. History items are displayed in chronological order with images and descriptions.

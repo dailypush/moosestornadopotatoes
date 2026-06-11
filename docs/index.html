@@ -358,32 +358,6 @@
 
                     <div class="row mt-5">
                         <div class="col-12">
-                            <h3 class="h4 mb-4 text-center">Our Journey Through the Years</h3>
-
-                            <!-- History Carousel -->
-                            <div id="historyCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-                                <div class="carousel-indicators" id="historyIndicators">
-                                    <!-- Indicators will be loaded dynamically -->
-                                </div>
-                                <div class="carousel-inner" id="historyCarouselInner">
-                                    <!-- History slides will be loaded dynamically -->
-                                </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#historyCarousel"
-                                    data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#historyCarousel"
-                                    data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-5">
-                        <div class="col-12">
                             <h3 class="h4 mb-4 text-center">What Makes Our Tornado Potatoes Special</h3>
                             <div class="row g-4 justify-content-center">
                                 <div class="col-md-4">
@@ -477,47 +451,34 @@
     </section>
 
     <!-- Social Media Feed Section -->
-    <section id="social-feed" class="py-5">
+    <section id="social-feed" class="py-5 facebook-showcase">
         <div class="container">
-            <h2 class="text-center mb-5">Latest Updates</h2>
+            <div class="facebook-showcase-header">
+                <div>
+                    <p class="text-uppercase fw-semibold text-primary mb-2">Latest Updates</p>
+                    <h2 class="mb-3">Follow the potato trail on Facebook</h2>
+                    <p class="lead mb-0">
+                        Most pop-up dates, festival photos, flavor notes, and customer conversations happen on our
+                        Facebook feed first.
+                    </p>
+                </div>
+                <a href="https://www.facebook.com/profile.php?id=100094510050087" target="_blank"
+                    rel="noopener noreferrer" class="btn btn-primary">
+                    <i class="bi bi-facebook me-2"></i> Open Facebook
+                </a>
+            </div>
 
-            <!-- Facebook Page Plugin -->
-            <div class="row justify-content-center mb-4">
-                <div class="col-12 col-lg-8">
-                    <!-- Using sandboxed iframe with stricter controls to reduce CORB errors -->
-                    <div id="fb-container">
-                        <iframe
-                            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D100094510050087&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false"
-                            width="100%" height="600" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
-                            sandbox="allow-scripts allow-same-origin allow-popups" referrerpolicy="no-referrer"
-                            allowfullscreen="false" loading="lazy">
-                        </iframe>
-                    </div>
-
-                    <!-- Fallback content if Facebook doesn't load -->
-                    <div id="fallback-content" class="d-none">
-                        <div class="card">
-                            <div class="card-body text-center p-5">
-                                <i class="bi bi-exclamation-circle text-warning fs-1 mb-3"></i>
-                                <h3 class="h5 mb-3">Unable to load Facebook updates</h3>
-                                <p class="mb-4">Visit our Facebook page directly to see our latest posts and updates
-                                    from Chardon, Ohio!</p>
-                                <a href="https://www.facebook.com/profile.php?id=100094510050087" target="_blank"
-                                    rel="noopener noreferrer" class="btn btn-primary">
-                                    Visit Our Facebook Page <i class="bi bi-facebook ms-2"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <div id="facebook-posts-container" class="facebook-post-grid mt-4">
+                <div class="facebook-post-card facebook-post-card-placeholder">
+                    <div class="placeholder-loader"></div>
                 </div>
             </div>
 
-            <div class="text-center mt-4">
-                <a href="https://www.facebook.com/profile.php?id=100094510050087" target="_blank"
-                    rel="noopener noreferrer" class="btn btn-primary">
-                    Follow Us on Facebook
-                    <i class="bi bi-facebook ms-2"></i>
-                </a>
+            <div class="facebook-community-note mt-4">
+                <i class="bi bi-chat-square-heart text-primary fs-4"></i>
+                <p class="mb-0">
+                    Tag us, comment on your favorite flavor, or check the feed before heading out to find the trailer.
+                </p>
             </div>
         </div>
     </section>

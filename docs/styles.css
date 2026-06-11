@@ -227,96 +227,89 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Facebook Feed Styling */
-.fb-page {
-    width: 100%;
-    margin: 0 auto;
-    display: block;
-    background-color: #f8f9fa;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    border: 1px solid #dee2e6;
+/* Facebook showcase */
+.facebook-showcase {
+    background: #f7f7f7;
 }
 
-.fb-page iframe {
-    max-width: 100%;
-    border-radius: 0.5rem;
+.facebook-showcase-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
 }
 
-/* Facebook feed loading placeholder */
-.facebook-placeholder {
-    width: 100%;
-    height: 600px;
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-    border-radius: 0.5rem;
+.facebook-showcase-header > div {
+    max-width: 720px;
+}
+
+.facebook-post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.facebook-post-card {
+    min-height: 240px;
+    border: 1px solid #e4e4e4;
+    border-radius: 8px;
+    background: #fff;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.06);
+}
+
+.facebook-post-card-featured {
+    border-top: 4px solid var(--primary-color);
+}
+
+.facebook-card-topline {
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: #6c757d;
-    font-size: 1.1rem;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
-/* Fallback content styling */
-#fallback-content .card {
-    border: 2px dashed #dee2e6;
-    background-color: #f8f9fa;
+.facebook-card-topline i {
+    font-size: 1.35rem;
 }
 
-#fallback-content .bi-exclamation-circle {
-    color: #ffc107 !important;
+.facebook-card-link {
+    margin-top: auto;
+    color: var(--primary-color);
+    font-weight: 700;
+    text-decoration: none;
 }
 
-/* Responsive adjustments for Facebook feed */
-@media (max-width: 768px) {
-    .fb-page {
-        width: 100%;
-        min-height: 500px;
-    }
-    
-    .facebook-placeholder {
-        height: 500px;
-        font-size: 1rem;
-    }
-    
-    #social-feed .container {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+.facebook-card-link:hover,
+.facebook-card-link:focus {
+    color: var(--primary-hover);
+    text-decoration: underline;
 }
 
-@media (max-width: 576px) {
-    .fb-page {
-        min-height: 400px;
-    }
-    
-    .facebook-placeholder {
-        height: 400px;
-    }
+.facebook-community-note {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid #e4e4e4;
+    border-radius: 8px;
+    background: #fff;
+    padding: 1rem 1.25rem;
 }
 
-/* Social Media Feed Section */
-.social-card {
+.facebook-post-card-placeholder {
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card-img-wrapper {
-    position: relative;
-    padding-bottom: 75%;
-    /* 4:3 aspect ratio */
 }
 
 .placeholder-loader {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
@@ -332,35 +325,15 @@ html {
     }
 }
 
-/* Instagram Feed Image */
-.instagram-post {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
+@media (max-width: 992px) {
+    .facebook-showcase-header {
+        align-items: start;
+        flex-direction: column;
+    }
 
-.social-card:hover .instagram-post {
-    transform: scale(1.05);
-}
-
-/* Facebook Post Content */
-.social-card .card-body {
-    padding: 1rem;
-    background: white;
-}
-
-.social-card p {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 0.5rem;
-}
-
-.social-card .text-muted {
-    font-size: 0.8rem;
+    .facebook-post-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Styles for the PDF download button and spinner */

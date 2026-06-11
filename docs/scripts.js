@@ -2,41 +2,7 @@
 let menuData = {};
 let historyData = {};
 let eventsData = {};
-
-// Global error handler to suppress Facebook console spam and CORB errors
-window.addEventListener('error', function(event) {
-    const message = event.message || '';
-    const source = event.filename || '';
-    
-    // Suppress Facebook-related errors and CORB errors
-    if (message.includes('Could not find element') || 
-        message.includes('fburl.com') || 
-        message.includes('__elem_') ||
-        message.includes('Cross-Origin Read Blocking') ||
-        message.includes('CORB') ||
-        message.includes('Content Security Policy') ||
-        message.includes('unsafe-eval') ||
-        source.includes('facebook.com') ||
-        source.includes('fbcdn.net')) {
-        event.preventDefault();
-        return false;
-    }
-});
-
-// Suppress unhandled promise rejections from Facebook
-window.addEventListener('unhandledrejection', function(event) {
-    const reason = event.reason || '';
-    if (typeof reason === 'string' && 
-        (reason.includes('Could not find element') || 
-         reason.includes('fburl.com') || 
-         reason.includes('__elem_') ||
-         reason.includes('Cross-Origin Read Blocking') ||
-         reason.includes('CORB') ||
-         reason.includes('Content Security Policy') ||
-         reason.includes('unsafe-eval'))) {
-        event.preventDefault();
-    }
-});
+let facebookPostsData = {};
 
 // Function to load menu from JSON file
 async function loadMenu() {
@@ -125,6 +91,35 @@ async function loadEvents() {
         };
         console.log('Using fallback events data:', eventsData);
         renderEvents();
+    }
+}
+
+// Function to load curated Facebook post highlights
+async function loadFacebookPosts() {
+    try {
+        const response = await fetch('./facebook-posts.json');
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        facebookPostsData = await response.json();
+        renderFacebookPosts();
+    } catch (error) {
+        console.error('Error loading Facebook post highlights:', error);
+        facebookPostsData = {
+            posts: [
+                {
+                    category: "Facebook",
+                    title: "Catch the latest updates",
+                    description: "Follow Mooses Tornado Potatoes for locations, photos, and fresh menu news.",
+                    link: "https://www.facebook.com/profile.php?id=100094510050087",
+                    icon: "bi-facebook",
+                    featured: true
+                }
+            ]
+        };
+        renderFacebookPosts();
     }
 }
 
@@ -260,6 +255,46 @@ function renderMenu() {
     menuContainer.innerHTML = menuHTML;
 }
 
+// Function to render Facebook post highlights
+function renderFacebookPosts() {
+    const postsContainer = document.getElementById('facebook-posts-container');
+    if (!postsContainer) return;
+
+    const posts = facebookPostsData.posts || [];
+
+    if (posts.length === 0) {
+        postsContainer.innerHTML = `
+            <div class="facebook-post-card facebook-post-card-featured">
+                <div class="facebook-card-icon"><i class="bi bi-facebook"></i></div>
+                <h3 class="h5 mb-2">Follow Mooses on Facebook</h3>
+                <p class="text-muted mb-3">See the latest truck updates, photos, and event chatter.</p>
+                <a href="https://www.facebook.com/profile.php?id=100094510050087" target="_blank" rel="noopener noreferrer" class="stretched-link">Open Facebook</a>
+            </div>
+        `;
+        return;
+    }
+
+    postsContainer.innerHTML = posts.map(post => {
+        const featuredClass = post.featured ? ' facebook-post-card-featured' : '';
+        const icon = post.icon || 'bi-facebook';
+        const link = post.link || 'https://www.facebook.com/profile.php?id=100094510050087';
+
+        return `
+            <article class="facebook-post-card${featuredClass}">
+                <div class="facebook-card-topline">
+                    <span>${post.category || 'Facebook'}</span>
+                    <i class="bi ${icon}" aria-hidden="true"></i>
+                </div>
+                <h3 class="h5 mb-2">${post.title}</h3>
+                <p class="text-muted mb-4">${post.description}</p>
+                <a href="${link}" target="_blank" rel="noopener noreferrer" class="facebook-card-link">
+                    View on Facebook <i class="bi bi-arrow-up-right ms-1" aria-hidden="true"></i>
+                </a>
+            </article>
+        `;
+    }).join('');
+}
+
 // Function to render history carousel
 function renderHistory() {
     try {
@@ -373,40 +408,6 @@ if (typeof window.jspdf !== 'undefined') {
 
 // Add loading overlay functionality
 document.addEventListener('DOMContentLoaded', () => {
-    // Suppress Facebook console errors and CORB messages
-    const originalConsoleError = console.error;
-    const originalConsoleWarn = console.warn;
-    
-    console.error = function(...args) {
-        const message = args.join(' ');
-        // Filter out Facebook-related errors and CORB messages
-        if (message.includes('Could not find element') || 
-            message.includes('fburl.com') || 
-            message.includes('__elem_') ||
-            message.includes('Cross-Origin Read Blocking') ||
-            message.includes('CORB blocked') ||
-            message.includes('Module "__elem_') ||
-            message.includes('Content Security Policy') ||
-            message.includes('unsafe-eval')) {
-            return; // Don't log these errors
-        }
-        originalConsoleError.apply(console, args);
-    };
-    
-    console.warn = function(...args) {
-        const message = args.join(' ');
-        // Filter out CORB warnings and CSP warnings
-        if (message.includes('Cross-Origin Read Blocking') ||
-            message.includes('CORB blocked') ||
-            message.includes('facebook.com') ||
-            message.includes('fbcdn.net') ||
-            message.includes('Content Security Policy') ||
-            message.includes('unsafe-eval')) {
-            return; // Don't log these warnings
-        }
-        originalConsoleWarn.apply(console, args);
-    };
-
     const loadingOverlay = document.getElementById('loadingOverlay');
 
     // Function to hide loading overlay
@@ -428,13 +429,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeContent() {
         console.log('Initializing content...');
         
-        // Load menu, history, and events from JSON files
-        console.log('Starting to load menu, history, and events');
+        // Load menu, Facebook highlights, and events from JSON files
+        console.log('Starting to load menu, Facebook highlights, and events');
         try {
             loadMenu();
-            loadHistory();
+            loadFacebookPosts();
             loadEvents();
-            console.log('Menu, history, and events loading initiated');
+            console.log('Menu, Facebook highlights, and events loading initiated');
         } catch (error) {
             console.error('Error initiating content load:', error);
         }
@@ -462,33 +463,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingOverlay.style.transition = 'opacity 0.5s ease-in-out';
         console.log('Transition added to loading overlay');
     }
-
-    // Check if Facebook iframe loaded properly with better error handling
-    setTimeout(function() {
-        try {
-            const fbContainer = document.querySelector('#fb-container');
-            const fbIframe = fbContainer ? fbContainer.querySelector('iframe') : null;
-            
-            if (!fbIframe || fbIframe.offsetHeight === 0) {
-                console.log('Facebook iframe failed to load, showing fallback');
-                const fallbackContent = document.getElementById('fallback-content');
-                if (fallbackContent && fbContainer) {
-                    fbContainer.style.display = 'none';
-                    fallbackContent.classList.remove('d-none');
-                }
-            } else {
-                console.log('Facebook iframe loaded successfully');
-            }
-        } catch (error) {
-            console.log('Facebook iframe check failed, showing fallback');
-            const fallbackContent = document.getElementById('fallback-content');
-            const fbContainer = document.querySelector('#fb-container');
-            if (fallbackContent && fbContainer) {
-                fbContainer.style.display = 'none';
-                fallbackContent.classList.remove('d-none');
-            }
-        }
-    }, 5000); // 5 seconds timeout for Facebook iframe to load
 
     const downloadBtn = document.getElementById('downloadPdfBtn');
     if (downloadBtn) {
