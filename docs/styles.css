@@ -13,6 +13,68 @@
     background-attachment: fixed;
 }
 
+/* News feature */
+.news-feature {
+    background: #fff7f2;
+}
+
+.news-video-preview {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    aspect-ratio: 16 / 10;
+    background: #1f1f1f;
+}
+
+.news-video-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.news-video-preview::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.42));
+}
+
+.news-play-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.news-play-button {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: var(--primary-color);
+    box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.news-play-button i {
+    font-size: 2.75rem;
+    line-height: 1;
+    margin-left: 4px;
+}
+
+.news-play-link:hover .news-play-button,
+.news-play-link:focus .news-play-button {
+    transform: scale(1.08);
+    background: var(--primary-hover);
+}
+
 /* Custom button styling */
 .btn-primary {
     background-color: var(--primary-color);
@@ -90,6 +152,15 @@
 @media (max-width: 768px) {
     #hero h1 {
         font-size: calc(2rem + 2vw);
+    }
+
+    .news-play-button {
+        width: 64px;
+        height: 64px;
+    }
+
+    .news-play-button i {
+        font-size: 2.25rem;
     }
 
     .card-img-top {
