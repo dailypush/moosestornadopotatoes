@@ -144,10 +144,22 @@ function renderEvents() {
         }
 
         let eventsHTML = '';
-        
-        // Filter upcoming events
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const parseEventDate = (dateValue) => {
+            if (!dateValue) return null;
+            const [year, month, day] = dateValue.split('-').map(Number);
+            if (!year || !month || !day) return null;
+            return new Date(year, month - 1, day);
+        };
+
+        // Filter upcoming events by status and date
         const upcomingEvents = eventsData.events
-            .filter(event => event.status === 'upcoming');
+            .filter(event => {
+                const eventDate = parseEventDate(event.date);
+                return event.status === 'upcoming' && eventDate && eventDate >= today;
+            });
         
         if (upcomingEvents.length === 0) {
             eventsHTML = '<p class="text-muted">No upcoming events at this time.</p>';
@@ -166,8 +178,8 @@ function renderEvents() {
             // Sort events within each location chronologically
             Object.keys(eventsByLocation).forEach(location => {
                 eventsByLocation[location].sort((a, b) => {
-                    const dateA = new Date(a.date || a.displayDate);
-                    const dateB = new Date(b.date || b.displayDate);
+                    const dateA = parseEventDate(a.date);
+                    const dateB = parseEventDate(b.date);
                     return dateA - dateB;
                 });
             });
