@@ -190,9 +190,9 @@ function renderEvents() {
             
             // Render each location group
             Object.keys(eventsByLocation).sort().forEach(location => {
-                eventsHTML += `<div class="mb-5">
-                    <h4 class="h5 mb-3 text-primary"><i class="bi bi-geo-alt me-2"></i>${location}</h4>
-                    <div class="list-group list-group-flush">`;
+                eventsHTML += `<div class="event-location-group">
+                    <h4 class="event-location-title"><i class="bi bi-geo-alt me-2"></i>${location}</h4>
+                    <div class="event-list">`;
                 
                 eventsByLocation[location].forEach(event => {
                     const displayDate = event.displayDate || event.date;
@@ -201,20 +201,15 @@ function renderEvents() {
                     const websiteLink = event.website ? `<a href="${event.website}" target="_blank" class="small text-primary text-decoration-none"><i class="bi bi-link-45deg me-1"></i>Event Website</a>` : '';
                     
                     eventsHTML += `
-                        <div class="list-group-item px-0${featuredClass}">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <h5 class="h6 mb-1">${event.name}</h5>
-                                    <p class="small text-muted mb-1"><i class="bi bi-clock me-1"></i>${event.time}</p>
-                                    <p class="small text-success mb-1">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        ${event.description}
-                                    </p>
-                                    ${websiteLink ? `<p class="mb-0">${websiteLink}</p>` : ''}
-                                </div>
-                                <div class="text-end">
+                        <div class="event-item${featuredClass}">
+                            <div class="event-date-badge">${displayDate}</div>
+                            <div class="event-details">
+                                <h5 class="event-title">${event.name}</h5>
+                                <div class="event-meta"><i class="bi bi-clock me-1"></i>${event.time}</div>
+                                <div class="event-description"><i class="bi bi-info-circle me-1"></i>${event.description}</div>
+                                <div class="event-actions">
                                     ${recurringBadge}
-                                    <span class="badge bg-primary rounded-pill">${displayDate}</span>
+                                    ${websiteLink}
                                 </div>
                             </div>
                         </div>
