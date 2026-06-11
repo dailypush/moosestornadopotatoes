@@ -2,7 +2,6 @@
 let menuData = {};
 let historyData = {};
 let eventsData = {};
-let facebookPostsData = {};
 
 // Function to load menu from JSON file
 async function loadMenu() {
@@ -91,35 +90,6 @@ async function loadEvents() {
         };
         console.log('Using fallback events data:', eventsData);
         renderEvents();
-    }
-}
-
-// Function to load curated Facebook post highlights
-async function loadFacebookPosts() {
-    try {
-        const response = await fetch('./facebook-posts.json');
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        facebookPostsData = await response.json();
-        renderFacebookPosts();
-    } catch (error) {
-        console.error('Error loading Facebook post highlights:', error);
-        facebookPostsData = {
-            posts: [
-                {
-                    category: "Facebook",
-                    title: "Catch the latest updates",
-                    description: "Follow Mooses Tornado Potatoes for locations, photos, and fresh menu news.",
-                    link: "https://www.facebook.com/profile.php?id=100094510050087",
-                    icon: "bi-facebook",
-                    featured: true
-                }
-            ]
-        };
-        renderFacebookPosts();
     }
 }
 
@@ -262,46 +232,6 @@ function renderMenu() {
     menuContainer.innerHTML = menuHTML;
 }
 
-// Function to render Facebook post highlights
-function renderFacebookPosts() {
-    const postsContainer = document.getElementById('facebook-posts-container');
-    if (!postsContainer) return;
-
-    const posts = facebookPostsData.posts || [];
-
-    if (posts.length === 0) {
-        postsContainer.innerHTML = `
-            <div class="facebook-post-card facebook-post-card-featured">
-                <div class="facebook-card-icon"><i class="bi bi-facebook"></i></div>
-                <h3 class="h5 mb-2">Follow Mooses on Facebook</h3>
-                <p class="text-muted mb-3">See the latest truck updates, photos, and event chatter.</p>
-                <a href="https://www.facebook.com/profile.php?id=100094510050087" target="_blank" rel="noopener noreferrer" class="stretched-link">Open Facebook</a>
-            </div>
-        `;
-        return;
-    }
-
-    postsContainer.innerHTML = posts.map(post => {
-        const featuredClass = post.featured ? ' facebook-post-card-featured' : '';
-        const icon = post.icon || 'bi-facebook';
-        const link = post.link || 'https://www.facebook.com/profile.php?id=100094510050087';
-
-        return `
-            <article class="facebook-post-card${featuredClass}">
-                <div class="facebook-card-topline">
-                    <span>${post.category || 'Facebook'}</span>
-                    <i class="bi ${icon}" aria-hidden="true"></i>
-                </div>
-                <h3 class="h5 mb-2">${post.title}</h3>
-                <p class="text-muted mb-4">${post.description}</p>
-                <a href="${link}" target="_blank" rel="noopener noreferrer" class="facebook-card-link">
-                    View on Facebook <i class="bi bi-arrow-up-right ms-1" aria-hidden="true"></i>
-                </a>
-            </article>
-        `;
-    }).join('');
-}
-
 // Function to render history carousel
 function renderHistory() {
     try {
@@ -436,13 +366,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeContent() {
         console.log('Initializing content...');
         
-        // Load menu, Facebook highlights, and events from JSON files
-        console.log('Starting to load menu, Facebook highlights, and events');
+        // Load menu and events from JSON files
+        console.log('Starting to load menu and events');
         try {
             loadMenu();
-            loadFacebookPosts();
             loadEvents();
-            console.log('Menu, Facebook highlights, and events loading initiated');
+            console.log('Menu and events loading initiated');
         } catch (error) {
             console.error('Error initiating content load:', error);
         }

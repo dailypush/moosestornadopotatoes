@@ -469,9 +469,25 @@
                 </a>
             </div>
 
-            <div id="facebook-posts-container" class="facebook-post-grid mt-4">
-                <div class="facebook-post-card facebook-post-card-placeholder">
-                    <div class="placeholder-loader"></div>
+            <div class="facebook-live-panel mt-4">
+                <div class="facebook-live-copy">
+                    <h3 class="h5 mb-2">Live From Facebook</h3>
+                    <p class="text-muted mb-0">Recent posts load here when Facebook allows the embedded feed.</p>
+                </div>
+                <div class="facebook-live-frame">
+                    <iframe
+                        title="Mooses Tornado Potatoes Facebook feed"
+                        src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D100094510050087&tabs=timeline&width=500&height=420&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
+                        width="100%" height="420" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+                        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                        referrerpolicy="no-referrer" allowfullscreen="false" loading="lazy">
+                    </iframe>
+                </div>
+                <div class="facebook-live-fallback">
+                    <a href="https://www.facebook.com/profile.php?id=100094510050087" target="_blank"
+                        rel="noopener noreferrer" class="btn btn-outline-primary btn-sm">
+                        Open full feed <i class="bi bi-arrow-up-right ms-1"></i>
+                    </a>
                 </div>
             </div>
 
